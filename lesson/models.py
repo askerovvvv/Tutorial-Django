@@ -34,7 +34,7 @@ class Lesson(models.Model):
 
 
 class Video(models.Model):
-    video = models.FileField(upload_to='videolesson/', verbose_name='Усман лох/чмо/пидор')
+    video = models.FileField(upload_to='videolesson/', verbose_name='че-за-нахуй/блять')
     lesson = models.ForeignKey(Lesson, related_name='video', on_delete=models.CASCADE, verbose_name='Видео для урока')
 
     class Meta:
