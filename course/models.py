@@ -21,6 +21,7 @@ class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
     # student_counter
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
+    course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории {self.category}'
@@ -28,18 +29,6 @@ class Course(models.Model):
     class Meta:
         verbose_name = 'Курс'
         verbose_name = 'Курсы'
-
-
-class CourseImage(models.Model):
-    course = models.ForeignKey(Course, related_name='courseimage', on_delete=models.CASCADE, verbose_name='К какому курсу принадлежит')
-    course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
-
-    def __str__(self):
-        return f'Это фото для курса {self.course}'
-
-    class Meta:
-        verbose_name = 'Фото курса'
-        verbose_name_plural = 'Фото курсов'
 
 
 class Review(models.Model):
@@ -55,8 +44,8 @@ class Review(models.Model):
         return f'От пользователя <<{self.user}>> поставлен <<{self.rating}>> к курсу <<{self.course}>>'
 
     class Meta:
-        verbose_name = 'Рейтинг'
-        verbose_name_plural = 'Рейтинги'
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
 
 class Like(models.Model):

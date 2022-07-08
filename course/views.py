@@ -31,19 +31,6 @@ class CourseViewSet(ModelViewSet):
 
         return [permission() for permission in permissions]
 
-    # @action(methods=['POST'], detail=True)
-    # def rating(self, request, pk):
-    #     serializer = RatingSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #
-    #     try:
-    #         obj = Review.objects.get(course=self.get_object(), user=request.user)
-    #         obj.rating = request.data['rating']
-    #     except Review.DoesNotExist:
-    #         obj = Review(user=request.user, course=self.get_object(), rating=request.data['rating'])
-    #
-    #     obj.save()
-    #     return Response(request.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['POST'], detail=True)
     def like(self, request, pk):
