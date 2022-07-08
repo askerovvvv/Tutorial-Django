@@ -4,13 +4,11 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from lesson.views import *
 
 router = DefaultRouter()
-# router.register('', LessonViewSet)
 
-# router = SimpleRouter()
-router.register('lesson', LessonViewSet)
 router.register('adviser', AdviserViewSet)
+router.register('', LessonViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    # path('', include(router.urls))
+
 ]

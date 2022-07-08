@@ -5,6 +5,7 @@ import course.models
 
 class Adviser(models.Model):
     name = models.CharField(max_length=30, verbose_name='Имя преподавателя')
+    course = models.ForeignKey('course.Course', related_name='adviser', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -26,7 +27,7 @@ class Lesson(models.Model):
     course = models.ForeignKey('course.Course', related_name='lesson', on_delete=models.CASCADE, verbose_name='К какому курсу добавить урок')
 
     def __str__(self):
-        return f'Урок-{self.name} принадлежит к курсу --> {self.course}'
+        return f'Урок-{self.name} для курса --> {self.course}'
 
     class Meta:
         verbose_name = 'Урок'
@@ -34,7 +35,7 @@ class Lesson(models.Model):
 
 
 class Video(models.Model):
-    video = models.FileField(upload_to='videolesson/', verbose_name='че-за-нахуй/блять')
+    video = models.FileField(upload_to='videolesson/', verbose_name='Усман лапуля')
     lesson = models.ForeignKey(Lesson, related_name='video', on_delete=models.CASCADE, verbose_name='Видео для урока')
 
     class Meta:

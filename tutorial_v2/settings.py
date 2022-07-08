@@ -87,8 +87,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tutorial_v2',
-        'USER': 'hello',
-        'PASSWORD': '1',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': 5432
     }
@@ -143,3 +143,10 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 
 
 AUTH_USER_MODEL = 'account.CustomUser'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+}
