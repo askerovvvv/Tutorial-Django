@@ -23,4 +23,4 @@ class AdviserViewSet(ModelViewSet):
             permissions = [IsAdminUser]    
         
         return [permission() for permission in permissions]
-    
+

@@ -7,5 +7,5 @@ admin.site.register(Review)
 admin.site.register(Category)
 admin.site.register(Like)
 admin.site.register(Course)
-
+admin.site.register(SavedCourse)
 

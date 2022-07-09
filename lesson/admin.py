@@ -16,15 +16,16 @@ from lesson.models import *
 #     ]
 
 
-class VideoInAdmin(admin.TabularInline):
-    model = Video
-    fields = ('video', )
-    max_num = 1
+# class VideoInAdmin(admin.TabularInline):
+#     # model = Video
+#     # fields = ('video', )
+#     # max_num = 1
 
 
-@admin.register(Lesson)
-class LessonAdmin(admin.ModelAdmin):
-    inlines = [
-        VideoInAdmin
-    ]
+# @admin.register(Lesson)
+# class LessonAdmin(admin.ModelAdmin):
+#     inlines = [
+#         VideoInAdmin
+#     ]
 
+admin.site.register(Lesson)

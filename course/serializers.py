@@ -3,13 +3,11 @@ from rest_framework import serializers
 from course.models import *
 
 
-
 class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
         fields = '__all__'
-
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -34,5 +32,24 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('user', 'description', 'rating')
 
+
+class SavedCourseSerializer(serializers.ModelSerializer):
+    course = CourseSerializer(read_only=True)
+
+    class Meta:
+        model = SavedCourse
+        fields = ('user', 'course')
+
+
+class CourseRetrieveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['Отзывы'] = ReviewSerializer(instance.review.all(), many=True).data
+        return representation

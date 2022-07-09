@@ -60,3 +60,8 @@ class Like(models.Model):
         verbose_name = 'Лайк'
         verbose_name_plural = 'Лайки'
 
+
+class SavedCourse(models.Model):
+    course = models.ForeignKey(Course, related_name='saved', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='saved', on_delete=models.CASCADE)
+    saved = models.BooleanField(default=False)

@@ -5,10 +5,12 @@ from course.views import *
 
 router = DefaultRouter()
 router.register('review', ReviewViewSet)
+
 router.register('', CourseViewSet)
 
 
 urlpatterns = [
+    path('savedlist/', SavedCourseList.as_view()),
     path('', include(router.urls))
 ]
 
