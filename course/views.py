@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import action
@@ -31,6 +32,15 @@ class CourseViewSet(ModelViewSet):
             permissions = [IsAdminUser]
 
         return [permission() for permission in permissions]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(Q(name__icontains=search))
+            SearchHistory.objects.create(user=self.request.user, item=search)
+        return queryset
+
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -107,3 +117,15 @@ class CourseRegisterViewSet(ModelViewSet):
     def perform_create(self, serializer):
         # print(self.request.data)
         serializer.save(user=self.request.user)
+
+
+class SearchHistoryList(ListAPIView):
+    queryset = SearchHistory.objects.all()
+    serializer_class = SearchHistorySerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset.filter(user=self.request.user)
+        if queryset.count() > 3:
+            queryset.order_by('-pk').reverse()[0].delete()
+        return queryset

@@ -70,3 +70,11 @@ class SavedCourse(models.Model):
 class CourseRegister(models.Model):
     course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE)
+
+
+class SearchHistory(models.Model):
+    user = models.ForeignKey(User, related_name='searchhistory', on_delete=models.CASCADE)
+    item = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.item

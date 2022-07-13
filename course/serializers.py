@@ -57,7 +57,6 @@ class CourseRetrieveSerializer(serializers.ModelSerializer):
 
 class CourseRegisterSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
-    # course = CourseSerializer(read_only=True)
 
     class Meta:
         model = CourseRegister
@@ -79,3 +78,10 @@ class CourseRegisterListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseRegister
         fields = ('user', 'course')
+
+
+class SearchHistorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SearchHistory
+        fields = '__all__'
