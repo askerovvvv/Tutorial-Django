@@ -5,7 +5,7 @@ from course.views import *
 
 router = DefaultRouter()
 router.register('review', ReviewViewSet)
-
+router.register('courseregister', CourseRegisterViewSet, basename='CourseRegister')
 router.register('', CourseViewSet)
 
 

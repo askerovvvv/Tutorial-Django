@@ -65,3 +65,8 @@ class SavedCourse(models.Model):
     course = models.ForeignKey(Course, related_name='saved', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='saved', on_delete=models.CASCADE)
     saved = models.BooleanField(default=False)
+
+
+class CourseRegister(models.Model):
+    course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE)

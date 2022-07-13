@@ -53,3 +53,29 @@ class CourseRetrieveSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['Отзывы'] = ReviewSerializer(instance.review.all(), many=True).data
         return representation
+
+
+class CourseRegisterSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+    # course = CourseSerializer(read_only=True)
+
+    class Meta:
+        model = CourseRegister
+        fields = ('user', 'course')
+
+    def validate(self, attrs):
+        user = self.context.get('request').user
+        course = attrs.get('course')
+        course_from_models = CourseRegister.objects.filter(course=course, user=user)
+        if course_from_models:
+            raise serializers.ValidationError('Вы уже подписаны на данный курс!')
+        return attrs
+
+
+class CourseRegisterListSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+    course = CourseSerializer(read_only=True)
+
+    class Meta:
+        model = CourseRegister
+        fields = ('user', 'course')

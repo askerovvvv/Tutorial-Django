@@ -15,3 +15,8 @@ class AdviserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class GroupLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupLesson
+        fields = '__all__'
+

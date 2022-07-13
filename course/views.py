@@ -70,3 +70,40 @@ class SavedCourseList(ListAPIView):
         user = self.request.user
         queryset = queryset.filter(user=user, saved=True)
         return queryset
+
+
+class CourseRegisterViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CourseRegister.objects.all()
+    serializer_class = CourseRegisterSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = CourseRegisterListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        queryset = queryset.filter(user=user,)
+        return queryset
+    #
+    # def create(self, request, *args, **kwargs):
+    #     object = CourseRegister.objects.filter(user=request.user, course=)
+    #
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def perform_create(self, serializer):
+        # print(self.request.data)
+        serializer.save(user=self.request.user)

@@ -8,4 +8,5 @@ admin.site.register(Category)
 admin.site.register(Like)
 admin.site.register(Course)
 admin.site.register(SavedCourse)
+admin.site.register(CourseRegister)
 
