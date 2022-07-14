@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from course.models import *
+from lesson.serializers import GroupLessonSerializer
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class CourseSerializer(serializers.ModelSerializer):
         representation['likes'] = instance.like.filter(like=True).count()
         rating_result = 0
         sum_of_description = 0
+
         for i in instance.review.all():
             rating_result += int(i.rating)
             if i.description:
@@ -24,6 +26,7 @@ class CourseSerializer(serializers.ModelSerializer):
         else:
             representation['rating'] = rating_result / instance.review.all().count()
         representation['comments'] = sum_of_description
+        representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
 
         return representation
 

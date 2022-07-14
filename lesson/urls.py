@@ -6,6 +6,8 @@ from lesson.views import *
 router = DefaultRouter()
 
 router.register('adviser', AdviserViewSet)
+# router.register('group', GroupLessonViewSet)
+
 router.register('', LessonViewSet)
 
 urlpatterns = [

@@ -14,6 +14,7 @@ from course.serializers import *
 
 
 class ReviewViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -108,6 +109,7 @@ class CourseRegisterViewSet(ModelViewSet):
 
 
 class SearchHistoryList(ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = SearchHistory.objects.all()
     serializer_class = SearchHistorySerializer
 

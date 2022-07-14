@@ -24,3 +24,7 @@ class AdviserViewSet(ModelViewSet):
         
         return [permission() for permission in permissions]
 
+
+# class GroupLessonViewSet(ModelViewSet):
+#     queryset = GroupLesson.objects.all()
+#     serializer_class = GroupLessonSerializer
