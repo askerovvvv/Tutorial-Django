@@ -13,3 +13,5 @@ django-filter
 celery
 redis
 
+djangorestframework_simplejwt
+

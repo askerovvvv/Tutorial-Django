@@ -9,7 +9,7 @@ class UserManager(BaseUserManager):
             raise ValueError("The given email must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-
+        user.create_activation_code()
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -36,8 +36,8 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     username = None
-    is_active = models.BooleanField(default=True)
-
+    is_active = models.BooleanField(default=False)
+    activation_code = models.CharField(max_length=100, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -46,5 +46,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-
-
+    def create_activation_code(self):
+        import uuid
+        code = str(uuid.uuid4())
+        self.activation_code = code

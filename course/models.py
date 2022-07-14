@@ -62,19 +62,41 @@ class Like(models.Model):
 
 
 class SavedCourse(models.Model):
-    course = models.ForeignKey(Course, related_name='saved', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='saved', on_delete=models.CASCADE)
-    saved = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, related_name='saved', on_delete=models.CASCADE, verbose_name='Курс для сохранение')
+    user = models.ForeignKey(User, related_name='saved', on_delete=models.CASCADE, verbose_name='Пользователь')
+    saved = models.BooleanField(default=False, verbose_name='Сохранить')
+
+    def __str__(self):
+        if self.saved == True:
+            return f"{self.course} --> {self.user}"
+        else:
+            return f"{self.course} не сохранил"
+
+    class Meta:
+        verbose_name = 'Сохраненный курс'
+        verbose_name_plural = 'Сохраненные курсы'
 
 
 class CourseRegister(models.Model):
-    course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE, verbose_name='К какому курсу')
+    user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE, verbose_name='Какой пользователь')
+
+    def __str__(self):
+        return f'{self.user} сохранил курс ---> {self.course}'
+
+    class Meta:
+        verbose_name = 'Запись на курс'
+        verbose_name_plural = 'Записи на курс'
 
 
 class SearchHistory(models.Model):
-    user = models.ForeignKey(User, related_name='searchhistory', on_delete=models.CASCADE)
-    item = models.CharField(max_length=50)
+    user = models.ForeignKey(User, related_name='searchhistory', on_delete=models.CASCADE, verbose_name='К какому пользователю принадлежит')
+    item = models.CharField(max_length=50, verbose_name='Название для поиска')
 
     def __str__(self):
         return self.item
+
+    class Meta:
+        verbose_name = 'История поиска'
+        verbose_name_plural = 'История поиска'
+

@@ -24,6 +24,7 @@ class CourseSerializer(serializers.ModelSerializer):
         else:
             representation['rating'] = rating_result / instance.review.all().count()
         representation['comments'] = sum_of_description
+
         return representation
 
 

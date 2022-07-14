@@ -41,7 +41,6 @@ class CourseViewSet(ModelViewSet):
             SearchHistory.objects.create(user=self.request.user, item=search)
         return queryset
 
-
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = CourseRetrieveSerializer(instance)
@@ -103,19 +102,8 @@ class CourseRegisterViewSet(ModelViewSet):
         user = self.request.user
         queryset = queryset.filter(user=user,)
         return queryset
-    #
-    # def create(self, request, *args, **kwargs):
-    #     object = CourseRegister.objects.filter(user=request.user, course=)
-    #
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
     def perform_create(self, serializer):
-        # print(self.request.data)
         serializer.save(user=self.request.user)
 
 
