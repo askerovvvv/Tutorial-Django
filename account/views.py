@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account.serializers import RegisterSerializer
+from account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer
 
 User = get_user_model()
 
@@ -36,7 +36,19 @@ class ActivationView(APIView):
             return Response("Активационный код не действителен")
 
 
+class ForgotPasswordApiView(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.send_code()
+            return Response('Вам отправлен активационыый код для смены пароля!')
 
 
+class ForgotPasswordCompleteApiView(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordCompleteSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.create_new_password()
+            return Response('Пароль успешно обновлён')
 
 
