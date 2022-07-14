@@ -19,7 +19,7 @@ class Category(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
-    # student_counter
+    # student_counter = models.IntegerField(blank=True)
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
 
@@ -80,6 +80,7 @@ class SavedCourse(models.Model):
 class CourseRegister(models.Model):
     course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE, verbose_name='К какому курсу')
     user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE, verbose_name='Какой пользователь')
+    student_counter = models.IntegerField(blank=True)
 
     def __str__(self):
         return f'{self.user} сохранил курс ---> {self.course}'

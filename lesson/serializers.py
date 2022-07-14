@@ -25,5 +25,5 @@ class GroupLessonSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['lessons'] = instance.lesson.all().count()
 
-        return  representation
+        return representation
 

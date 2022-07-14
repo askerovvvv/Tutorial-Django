@@ -27,7 +27,7 @@ class CourseSerializer(serializers.ModelSerializer):
             representation['rating'] = rating_result / instance.review.all().count()
         representation['comments'] = sum_of_description
         representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
-
+        # print(dir(Course.objects))
         return representation
 
 
@@ -67,12 +67,22 @@ class CourseRegisterSerializer(serializers.ModelSerializer):
         fields = ('user', 'course')
 
     def validate(self, attrs):
+        print(attrs.keys())
         user = self.context.get('request').user
         course = attrs.get('course')
         course_from_models = CourseRegister.objects.filter(course=course, user=user)
+        print(dir(CourseRegister))
         if course_from_models:
+            Course.student_counter = 12
             raise serializers.ValidationError('Вы уже подписаны на данный курс!')
         return attrs
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     instance.course.student_counter += 1
+    #     print(instance.course.student_counter)
+    #
+    #     return representation
 
 
 class CourseRegisterListSerializer(serializers.ModelSerializer):
