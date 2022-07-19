@@ -27,7 +27,6 @@ class CourseSerializer(serializers.ModelSerializer):
             representation['rating'] = rating_result / instance.review.all().count()
         representation['comments'] = sum_of_description
         representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
-        # print(dir(Course.objects))
         return representation
 
 
@@ -36,7 +35,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ('user', 'description', 'rating')
+        fields = '__all__'
 
 
 class SavedCourseSerializer(serializers.ModelSerializer):

@@ -15,3 +15,7 @@ redis
 
 djangorestframework_simplejwt
 
+python-json-logger
+
+
+

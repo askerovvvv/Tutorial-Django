@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import status
@@ -12,11 +14,22 @@ from rest_framework.viewsets import ModelViewSet
 from course.models import *
 from course.serializers import *
 
+logger = logging.getLogger('')
+
 
 class ReviewViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def create(self, request, *args, **kwargs):
+        logger.info(f'from ReviewViewSet -- {self.request.user}')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -72,8 +85,19 @@ class CourseViewSet(ModelViewSet):
 
 class SavedCourseList(ListAPIView):
     permission_classes = [IsAuthenticated]
+
     queryset = SavedCourse.objects.all()
     serializer_class = SavedCourseSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        logger.info(f'from saved course - {self.request.user}')
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -84,8 +108,19 @@ class SavedCourseList(ListAPIView):
 
 class CourseRegisterViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
+
     queryset = CourseRegister.objects.all()
     serializer_class = CourseRegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        logger.info(f'from CourseRegister -- {self.request.user}')
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
