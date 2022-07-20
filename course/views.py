@@ -39,13 +39,13 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = [IsAuthenticated]
-        else:
-            permissions = [IsAdminUser]
-
-        return [permission() for permission in permissions]
+    # def get_permissions(self):
+    #     if self.action in ['list', 'retrieve', 'saved', 'like']:
+    #         permissions = [IsAuthenticated]
+    #     else:
+    #         permissions = [IsAdminUser]
+    #
+    #     return [permission() for permission in permissions]
 
     def get_queryset(self):
         queryset = super().get_queryset()
