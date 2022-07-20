@@ -20,14 +20,18 @@ class Category(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
-    course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
+    # course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
 
     def __str__(self):
-        return f'Курс-{self.name}, принадлежит к категории {self.category}'
+        return f'Курс-{self.name}, принадлежит к категории '
 
     class Meta:
         verbose_name = 'Курс'
         verbose_name = 'Курсы'
+
+class ImageCourse(models.Model):
+    course = models.ForeignKey(Course, related_name='imagecourse', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
 
 
 class Review(models.Model):

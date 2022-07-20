@@ -1,4 +1,4 @@
-import cv2 as cv
+
 from rest_framework import serializers
 
 from lesson.models import *

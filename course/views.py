@@ -39,13 +39,13 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = [IsAuthenticated]
-        else:
-            permissions = [IsAdminUser]
-
-        return [permission() for permission in permissions]
+    # def get_permissions(self):
+    #     if self.action in ['list', 'retrieve', 'saved', 'like']:
+    #         permissions = [IsAuthenticated]
+    #     else:
+    #         permissions = [IsAdminUser]
+    #
+    #     return [permission() for permission in permissions]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -154,3 +154,5 @@ class SearchHistoryList(ListAPIView):
         if queryset.count() > 3:
             queryset.order_by('-pk').reverse()[0].delete()
         return queryset
+
+

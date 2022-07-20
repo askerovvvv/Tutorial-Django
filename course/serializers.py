@@ -3,6 +3,13 @@ from rest_framework import serializers
 from course.models import *
 from lesson.serializers import GroupLessonSerializer
 
+#
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
 
 class CourseSerializer(serializers.ModelSerializer):
 

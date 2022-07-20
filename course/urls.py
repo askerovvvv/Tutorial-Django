@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from course.views import *
 
+# app_name = 'course'
+
 router = DefaultRouter()
 router.register('review', ReviewViewSet)
 router.register('courseregister', CourseRegisterViewSet, basename='CourseRegister')
@@ -14,4 +16,3 @@ urlpatterns = [
     path('searchhistory/', SearchHistoryList.as_view()),
     path('', include(router.urls))
 ]
-
