@@ -14,6 +14,5 @@ router.register('', CourseViewSet)
 urlpatterns = [
     path('savedlist/', SavedCourseList.as_view()),
     path('searchhistory/', SearchHistoryList.as_view()),
-    path('', include(router.urls), name='course')
+    path('', include(router.urls))
 ]
-

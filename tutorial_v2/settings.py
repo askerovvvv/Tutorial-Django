@@ -119,7 +119,7 @@ WSGI_APPLICATION = 'tutorial_v2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tutorial_v2',
+        'NAME': 'tut',
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',

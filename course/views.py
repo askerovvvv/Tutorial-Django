@@ -154,3 +154,5 @@ class SearchHistoryList(ListAPIView):
         if queryset.count() > 3:
             queryset.order_by('-pk').reverse()[0].delete()
         return queryset
+
+
