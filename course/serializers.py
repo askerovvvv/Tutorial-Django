@@ -12,6 +12,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    # course_image = serializers.ListField(child=serializers.ImageField(
+    #     max_length=10000, allow_empty_file=False), write_only=True,
+    #     min_length=1, max_length=5)
 
     class Meta:
         model = Course

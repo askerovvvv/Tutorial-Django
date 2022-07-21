@@ -1,8 +1,12 @@
 import json
 import tempfile
+import io
+
 from io import StringIO
-from io import BytesIO
+
 import mock
+from django.conf import settings
+from django.conf.urls.static import static
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -35,17 +39,29 @@ import json
 #             return super().default(o)
 #
 
-class CourseTestApiCase(APITestCase, URLPatternsTestCase):
-    urlpatterns = [
-        path('api/', include('course.urls')),
-    ]
+class CourseTestApiCase(APITestCase):
+    # urlpatterns = [
+    #     path('api/', include('course.urls')),
+    # ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     def setUp(self):
         self.category = Category.objects.create(slug='Programming')
-        self.course1 = Course.objects.create(name='Python', category=self.category)
-        self.course2 = Course.objects.create(name='JS', category=self.category)
+        self.course1 = Course.objects.create(name='Python', category=self.category, )
+        self.course2 = Course.objects.create(name='JS', category=self.category, )
         self.category1 = CategorySerializer(self.category).data
+
         self.serializer_data = CourseSerializer([self.course1, self.course2], many=True).data
+
+        # example_photo = Image.new(mode='RGB', size=(30, 60))
+        # example_photo.save('testing.jpg')
+        # with open('testing.jpg', 'rb') as img:
+        #     self.photo = SimpleUploadedFile('testing.png',
+        #                                     img.read(),
+        #                                     content_type='image/png')
+        image = io.BytesIO()
+        Image.new('RGB', (150, 150)).save(image, 'JPEG')
+        image.seek(0)
+        self.file = SimpleUploadedFile('image.jpg', image.getvalue())
 
     def test_get(self):
         url = reverse('course-list')
@@ -54,27 +70,23 @@ class CourseTestApiCase(APITestCase, URLPatternsTestCase):
         self.assertEqual(self.serializer_data, response.data)
         self.assertEqual(len(self.serializer_data), len(response.data))
 
-    @staticmethod
-    def get_image_file(name='a.png', ext='png', size=(50, 50), color=(256, 0, 0)):
-        file_obj = BytesIO()
-        image = Image.new("RGBA", size=size, color=color)
-        image.save(file_obj, ext)
-        file_obj.seek(0)
-        return File(file_obj, name=name)
-
     def test_post(self):
-        url = reverse('course-list')
-        data = {
-            'id': 5,
+        self.data = {
+            'id': 3,
             'name': 'Java',
-            'category': 2,
+            'course_image': self.file,
+            'category': 1,
             'likes': 0,
             'rating': 0,
             'comments': 0,
-            'counter_lesson': []
+            'counter_lesson': [],
         }
-        json_data = json.dumps(data)
-        response = self.client.post(url, data=json_data, content_type='application/json')
+        url = reverse('course-list')
+        response = self.client.post(url, self.data, format='multipart')
+        print(response.json())
+        print('-----------------')
+        print(self.data)
+        print(response.data)
+        self.assertEqual(self.data, response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        self.assertEqual(data, response.data)
 
