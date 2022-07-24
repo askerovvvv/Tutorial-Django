@@ -51,9 +51,10 @@ class CourseTestApiCase(APITestCase):
         self.course1 = Course.objects.create(name='Python', category=self.category, )
         self.course2 = Course.objects.create(name='JS', category=self.category, )
         self.category1 = CategorySerializer(self.category).data
-        self.user = User.objects.create(email='testuser@gmail.com', is_staff=True)
+        self.user = User.objects.create(email='testsuperuser@gmail.com', is_staff=True)
+        self.user2 = User.objects.create(email='testuser@gmail.com')
         self.serializer_data = CourseSerializer([self.course1, self.course2], many=True).data
-        self.client.force_authenticate(user=self.user)
+
         # example_photo = Image.new(mode='RGB', size=(30, 60))
         # example_photo.save('testing.jpg')
         # with open('testing.jpg', 'rb') as img:
@@ -67,7 +68,7 @@ class CourseTestApiCase(APITestCase):
 
     def test_get(self):
         url = reverse('course-list')
-
+        self.client.force_authenticate(user=self.user2)
         response = self.client.get(url)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(self.serializer_data, response.data)
@@ -85,10 +86,29 @@ class CourseTestApiCase(APITestCase):
             'comments': 0,
             'counter_lesson': [],
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # self.assertTrue(f'media/courseimage/image_mryWGaN.jpg' in response.data['course_image'])
         self.assertEqual(3, Course.objects.all().count())
+
+    def test_invalid_post(self):
+        url = reverse('course-list')
+        self.data = {
+            'id': 3,
+            'name': 'Java',
+            'course_image': self.file,
+            'category': self.category.id,
+            'likes': 0,
+            'rating': 0,
+            'comments': 0,
+            'counter_lesson': [],
+        }
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.post(url, self.data, format='multipart')
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        # self.assertTrue(f'media/courseimage/image_mryWGaN.jpg' in response.data['course_image'])
+        self.assertTrue(3 != Course.objects.all().count())
 
     def test_update(self):
         url = reverse('course-detail', args=(self.course1.id,))
@@ -102,8 +122,29 @@ class CourseTestApiCase(APITestCase):
             'comments': 0,
             'counter_lesson': [],
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.put(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_200_OK, response.status_code)
+        ######################
+        ########################
+
+    def test_invalid_update(self):
+        url = reverse('course-detail', args=(self.course1.id,))
+        self.data = {
+            'id': 3,
+            'name': 'test name',
+            'course_image': self.file,
+            'category': self.category.id,
+            'likes': 0,
+            'rating': 0,
+            'comments': 0,
+            'counter_lesson': [],
+        }
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.put(url, self.data, format='multipart')
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        ######################
+        ########################
 
     def test_delete(self):
         url = reverse('course-detail', args=(self.course1.id,))
@@ -117,7 +158,25 @@ class CourseTestApiCase(APITestCase):
             'comments': 0,
             'counter_lesson': [],
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.delete(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(1, Course.objects.all().count())
+
+    def test_invalid_delete(self):
+        url = reverse('course-detail', args=(self.course1.id,))
+        self.data = {
+            'id': 3,
+            'name': 'test name',
+            'course_image': self.file,
+            'category': self.category.id,
+            'likes': 0,
+            'rating': 0,
+            'comments': 0,
+            'counter_lesson': [],
+        }
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.delete(url, self.data, format='multipart')
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertTrue(1 != Course.objects.all().count())
 
