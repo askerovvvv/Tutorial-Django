@@ -108,7 +108,7 @@ class CourseTestApiCase(APITestCase):
         response = self.client.post(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
         # self.assertTrue(f'media/courseimage/image_mryWGaN.jpg' in response.data['course_image'])
-        self.assertTrue(3 != Course.objects.all().count())
+        self.assertTrue(2 == Course.objects.all().count())
 
     def test_update(self):
         url = reverse('course-detail', args=(self.course1.id,))
@@ -178,5 +178,8 @@ class CourseTestApiCase(APITestCase):
         self.client.force_authenticate(user=self.user2)
         response = self.client.delete(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertTrue(1 != Course.objects.all().count())
+        self.assertTrue(2 == Course.objects.all().count())
 
+    # def test_like_post(self):
+    #     url = reverse('course-detail', args=(f'{self.course1.id}/like/'))
+    #     print(url)
