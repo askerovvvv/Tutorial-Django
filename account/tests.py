@@ -7,15 +7,17 @@ User = get_user_model()
 
 
 class AccountTestCase(TestCase):
-    def test_register(self):
-        user = {
+    def setUp(self):
+        self.user = {
             'email': 'test@gmail.com',
             'password': '123456',
-            'password2': '123456'
+            'password2': '123456',
+            'is_active': True
         }
 
+    def test_register(self):
         url = reverse('register')
-        response = self.client.post(url, user)
+        response = self.client.post(url, self.user)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual('Вы успешно зарегистрированы. Вам отправлено письмо с активизацией', response.data)
         self.assertTrue(1, User.objects.all().count())

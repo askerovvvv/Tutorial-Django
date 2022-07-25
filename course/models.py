@@ -30,11 +30,6 @@ class Course(models.Model):
         verbose_name = 'Курсы'
 
 
-class ImageCourse(models.Model):
-    course = models.ForeignKey(Course, related_name='imagecourse', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
-
-
 class Review(models.Model):
     course = models.ForeignKey(Course, related_name='review', on_delete=models.CASCADE, verbose_name='К какому курсу рейтинг')
     user = models.ForeignKey(User, related_name='review', on_delete=models.CASCADE, verbose_name='Владелец рейтинга')

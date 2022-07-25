@@ -22,8 +22,8 @@ from django.core.files.base import File
 from rest_framework.test import APITestCase, URLPatternsTestCase
 
 from django.urls import include, path, reverse
-from course.models import Course, Category
-from course.serializers import CourseSerializer, CategorySerializer
+from course.models import Course, Category, Review
+from course.serializers import CourseSerializer, CategorySerializer, ReviewSerializer
 
 import json
 
@@ -41,6 +41,7 @@ import json
 #
 User = get_user_model()
 
+
 class CourseTestApiCase(APITestCase):
     # urlpatterns = [
     #     path('api/', include('course.urls')),
@@ -50,7 +51,7 @@ class CourseTestApiCase(APITestCase):
         self.category = Category.objects.create(slug='Programming')
         self.course1 = Course.objects.create(name='Python', category=self.category, )
         self.course2 = Course.objects.create(name='JS', category=self.category, )
-        self.category1 = CategorySerializer(self.category).data
+        # self.category1 = CategorySerializer(self.category).data
         self.user = User.objects.create(email='testsuperuser@gmail.com', is_staff=True)
         self.user2 = User.objects.create(email='testuser@gmail.com')
         self.serializer_data = CourseSerializer([self.course1, self.course2], many=True).data
@@ -180,6 +181,21 @@ class CourseTestApiCase(APITestCase):
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
         self.assertTrue(2 == Course.objects.all().count())
 
-    # def test_like_post(self):
-    #     url = reverse('course-detail', args=(f'{self.course1.id}/like/'))
-    #     print(url)
+
+class ReviewTestApiCase(APITestCase):
+    def setUp(self):
+        self.category = Category.objects.create(slug='Programming')
+        self.course = Course.objects.create(name='Python', category=self.category)
+        self.user = User.objects.create_user(email='test1@gmail.com', password='123345631')
+        self.user2 = User.objects.create_user(email='test2@gmail.com', password='4124132')
+        self.review1 = Review.objects.create(course=self.course, user=self.user, description='testreview1,', rating=5)
+        self.review2 = Review.objects.create(course=self.course, user=self.user2, description='rqwfq,', rating=3)
+        self.serializer_data = ReviewSerializer([self.review1, self.review2], many=True).data
+
+    def test_get(self):
+        url = reverse('review-list')
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(url)
+        self.assertEqual(self.serializer_data, response.data)
+        self.assertEqual(Review.objects.all().count(), len(self.serializer_data))
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
