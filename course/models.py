@@ -21,6 +21,7 @@ class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '
@@ -38,6 +39,15 @@ class Review(models.Model):
         MinValueValidator(1),
         MaxValueValidator(5)
     ])
+
+    def save(self, *args, **kwargs):
+        from course.rating_average import set_rating
+        creating = not self.pk
+        old_rating = self.rating
+        super().save(*args, **kwargs)
+        new_rating = self.rating
+        if old_rating != new_rating or creating:
+            set_rating(self.course)
 
     def __str__(self):
         return f'От пользователя <<{self.user}>> поставлен <<{self.rating}>> к курсу <<{self.course}>>'

@@ -76,7 +76,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename': 'logger.log',
             'formatter': 'main_format',
@@ -87,7 +87,7 @@ LOGGING = {
        # notice the blank '', Usually you would put built in loggers like django or root here based on your needs
         '': {
             'handlers': ['file'], #notice how file variable is called in handler which has been defined above
-            'level': 'INFO',
+            'level': 'WARNING',
             'propagate': True,
         },
     },

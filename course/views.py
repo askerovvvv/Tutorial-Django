@@ -34,6 +34,12 @@ class ReviewViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        queryset = queryset.filter(user=user)
+        return queryset
+
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()

@@ -23,6 +23,7 @@ from rest_framework.test import APITestCase, URLPatternsTestCase
 
 from django.urls import include, path, reverse
 from course.models import Course, Category, Review
+from course.rating_average import set_rating
 from course.serializers import CourseSerializer, CategorySerializer, ReviewSerializer
 
 import json
@@ -126,6 +127,8 @@ class CourseTestApiCase(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.put(url, self.data, format='multipart')
         self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.course1.refresh_from_db()
+        self.assertEqual('test name', self.course1.name)
         ######################
         ########################
 
@@ -191,6 +194,11 @@ class ReviewTestApiCase(APITestCase):
         self.review1 = Review.objects.create(course=self.course, user=self.user, description='testreview1,', rating=5)
         self.review2 = Review.objects.create(course=self.course, user=self.user2, description='rqwfq,', rating=3)
         self.serializer_data = ReviewSerializer([self.review1, self.review2], many=True).data
+
+    def test_ok(self):
+        set_rating(self.course)
+        self.course.refresh_from_db()
+        self.assertEqual('4.00', str(self.course.rating))
 
     def test_get(self):
         url = reverse('review-list')

@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 
+import json
 User = get_user_model()
 
 
@@ -32,3 +33,10 @@ class AccountTestCase(TestCase):
         response = self.client.post(url, invalid_user)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(0, User.objects.all().count())
+
+    # def test_a(self):
+    #     user = User.objects.create_user(email='2@gmail.com', password='123')
+    #     url = reverse('forgotpassword')
+    #     json_data = json.dumps(user)
+    #     response = self.client.post(url, json_data, content_type='application/json')
+    #     print(response.json())
