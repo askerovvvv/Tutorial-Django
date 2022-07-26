@@ -199,3 +199,49 @@ class ReviewTestApiCase(APITestCase):
         self.assertEqual(self.serializer_data, response.data)
         self.assertEqual(Review.objects.all().count(), len(self.serializer_data))
         self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+    def test_post(self):
+        url = reverse('review-list')
+        authenticated_user = self.client.force_authenticate(user=self.user2)
+        data = {
+            'id': 3,
+            'course': self.course.id,
+            'user': authenticated_user,
+            'description': 'posttest',
+            'rating': 4
+        }
+        json_data = json.dumps(data)
+        response = self.client.post(url, json_data, content_type='application/json')
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(Review.objects.all().count(), 3)
+
+    def test_invalid_post_without_authentication(self):
+        url = reverse('review-list')
+        data = {
+            'id': 3,
+            'course': self.course.id,
+            'user': self.user.id,
+            'description': 'posttest',
+            'rating': 4
+        }
+        json_data = json.dumps(data)
+        response = self.client.post(url, json_data, content_type='application/json')
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
+        self.assertEqual(Review.objects.all().count(), 2)
+
+    def test_invalid_rating_post(self):
+        url = reverse('review-list')
+        authenticated_user = self.client.force_authenticate(user=self.user2)
+        data = {
+            'id': 3,
+            'course': self.course.id,
+            'user': authenticated_user,
+            'description': 'posttest',
+            'rating': 6
+        }
+        json_data = json.dumps(data)
+        response = self.client.post(url, json_data, content_type='application/json')
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual(Review.objects.all().count(), 2)
+
+
