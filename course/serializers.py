@@ -16,6 +16,7 @@ class CourseSerializer(serializers.ModelSerializer):
     # course_image = serializers.ListField(child=serializers.ImageField(
     #     max_length=10000, allow_empty_file=False), write_only=True,
     #     min_length=1, max_length=5)
+    likes = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Course
@@ -23,7 +24,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['likes'] = instance.like.filter(like=True).count()
+        # representation['likes'] = instance.like.filter(like=True).count()
 
         sum_of_description = 0
 

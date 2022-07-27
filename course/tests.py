@@ -11,6 +11,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count, Case, When
 from django.db.models.fields.files import ImageFieldFile
 from django.test import TestCase
 from rest_framework import status
@@ -54,7 +55,8 @@ class CourseTestApiCase(APITestCase):
         # self.category1 = CategorySerializer(self.category).data
         self.user = User.objects.create(email='testsuperuser@gmail.com', is_staff=True)
         self.user2 = User.objects.create(email='testuser@gmail.com')
-        self.serializer_data = CourseSerializer([self.course1, self.course2], many=True).data
+        course = Course.objects.all().annotate(likes=Count(Case(When(like__like=True, then=1)))).order_by('id')
+        self.serializer_data = CourseSerializer(course, many=True).data
 
         # example_photo = Image.new(mode='RGB', size=(30, 60))
         # example_photo.save('testing.jpg')

@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import action
@@ -42,12 +42,12 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all()
+    queryset = Course.objects.all().annotate(likes=Count(Case(When(like__like=True, then=1)))).order_by('id')
     serializer_class = CourseSerializer
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = [IsAuthenticated]
+            permissions = []
         else:
             permissions = [IsAdminUser]
 

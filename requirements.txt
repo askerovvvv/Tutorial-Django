@@ -17,5 +17,6 @@ djangorestframework_simplejwt
 
 python-json-logger
 
+django-debug-toolbar
 
 
