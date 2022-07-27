@@ -149,35 +149,15 @@ class CourseTestApiCase(APITestCase):
 
     def test_delete(self):
         url = reverse('course-detail', args=(self.course1.id,))
-        self.data = {
-            'id': 3,
-            'name': 'test name',
-            'course_image': self.file,
-            'category': self.category.id,
-            'likes': 0,
-            'rating': 0,
-            'comments': 0,
-            'counter_lesson': [],
-        }
         self.client.force_authenticate(user=self.user)
-        response = self.client.delete(url, self.data, format='multipart')
+        response = self.client.delete(url, )
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(1, Course.objects.all().count())
 
     def test_invalid_delete(self):
         url = reverse('course-detail', args=(self.course1.id,))
-        self.data = {
-            'id': 3,
-            'name': 'test name',
-            'course_image': self.file,
-            'category': self.category.id,
-            'likes': 0,
-            'rating': 0,
-            'comments': 0,
-            'counter_lesson': [],
-        }
         self.client.force_authenticate(user=self.user2)
-        response = self.client.delete(url, self.data, format='multipart')
+        response = self.client.delete(url, )
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
         self.assertTrue(2 == Course.objects.all().count())
 
