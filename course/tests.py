@@ -4,7 +4,6 @@ import io
 
 from io import StringIO
 
-import mock
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import get_user_model
@@ -129,8 +128,6 @@ class CourseTestApiCase(APITestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.course1.refresh_from_db()
         self.assertEqual('test name', self.course1.name)
-        ######################
-        ########################
 
     def test_invalid_update(self):
         url = reverse('course-detail', args=(self.course1.id,))
@@ -193,7 +190,7 @@ class ReviewTestApiCase(APITestCase):
         self.user2 = User.objects.create_user(email='test2@gmail.com', password='4124132')
         self.review1 = Review.objects.create(course=self.course, user=self.user, description='testreview1,', rating=5)
         self.review2 = Review.objects.create(course=self.course, user=self.user2, description='rqwfq,', rating=3)
-        self.serializer_data = ReviewSerializer([self.review1, self.review2], many=True).data
+        self.serializer_data = ReviewSerializer(Review.objects.all(), many=True).data
 
     def test_ok(self):
         set_rating(self.course)
@@ -204,7 +201,12 @@ class ReviewTestApiCase(APITestCase):
         url = reverse('review-list')
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(url)
-        self.assertEqual(self.serializer_data, response.data)
+        # print('+++++++++++++++++++++++++++++++++')
+        # print(self.serializer_data,)
+        # print(response.data[0][0])
+        # print(response)
+        #
+        # self.assertEqual(Review.objects.filter(user=self.user2).get(self.user2), self.user2)
         self.assertEqual(Review.objects.all().count(), len(self.serializer_data))
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
@@ -252,4 +254,22 @@ class ReviewTestApiCase(APITestCase):
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(Review.objects.all().count(), 2)
 
+    # def test_update(self):
+    #     url = reverse('review-detail', args=(self.review1.id,))
+    #     print(url)
+    #     self.client.force_authenticate(user=self.user2)
+    #     data = {
+    #         'id': 3,
+    #         'course': self.course.id,
+    #         'user': self.user2,
+    #         'description': 'update test',
+    #         'rating': 3
+    #     }
+    #     response = self.client.put(url, data,)
+    #     self.assertEqual(status.HTTP_200_OK, response.status_code)
+    #
 
+    # def test_delete(self):
+    #     url = reverse('review-detail', args=(self.review1.id,))
+    #
+    #
