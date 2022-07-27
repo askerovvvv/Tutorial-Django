@@ -21,7 +21,7 @@ class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True, blank=True)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '

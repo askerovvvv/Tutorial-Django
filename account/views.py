@@ -8,8 +8,10 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
-from account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer
+from account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer, \
+    UserProfileSerializer
 
 User = get_user_model()
 
@@ -51,4 +53,13 @@ class ForgotPasswordCompleteApiView(APIView):
             serializer.create_new_password()
             return Response('Пароль успешно обновлён')
 
+
+class UserProfile(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(email=self.request.user)
+        return queryset
 

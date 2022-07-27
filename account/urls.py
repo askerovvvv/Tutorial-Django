@@ -8,7 +8,8 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('activate/<uuid:activation_code>/', ActivationView.as_view(),),
     path('forgotpassword/', ForgotPasswordApiView.as_view(), name='forgotpassword'),
-    path('forgotpasswordcomplete/', ForgotPasswordCompleteApiView.as_view())
+    path('forgotpasswordcomplete/', ForgotPasswordCompleteApiView.as_view()),
+    path('myprofile/', UserProfile.as_view())
 
 ]
 

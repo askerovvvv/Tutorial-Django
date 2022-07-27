@@ -83,3 +83,9 @@ class ForgotPasswordCompleteSerializer(serializers.Serializer):
         user.activation_code = ''
         user.save()
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('date_joined', 'email', 'is_active', 'is_superuser')
+

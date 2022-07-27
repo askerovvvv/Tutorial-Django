@@ -51,3 +51,6 @@ class CustomUser(AbstractUser):
         code = str(uuid.uuid4())
         self.activation_code = code
 
+
+# class UserProfile(models.Model)
+#     user = models.Fo

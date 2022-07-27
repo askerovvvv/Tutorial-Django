@@ -6,7 +6,7 @@ import course.models
 class Adviser(models.Model):
     name = models.CharField(max_length=30, verbose_name='Имя преподавателя')
     course = models.ForeignKey('course.Course', related_name='adviser', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='imageadviser/', verbose_name='Фото преподователя')
+    image = models.ImageField(upload_to='imageadviser/', verbose_name='Фото преподователя', default=None, blank=True)
 
     def __str__(self):
         return self.name

@@ -18,6 +18,7 @@ class AdviserSerializer(serializers.ModelSerializer):
 
 
 class GroupLessonSerializer(serializers.ModelSerializer):
+
     # instance.lesson = LessonSerializer(read_only=True)
     class Meta:
         model = GroupLesson
@@ -25,7 +26,8 @@ class GroupLessonSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['lessons'] = instance.lesson.all().count()
+        representation['lesson_count'] = instance.lesson.all().count()
+        representation['lessons'] = LessonSerializer(instance.lesson.all(), many=True).data
 
         return representation
 

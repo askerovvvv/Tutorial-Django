@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from course.models import *
-from lesson.serializers import GroupLessonSerializer
+from lesson.serializers import GroupLessonSerializer, AdviserSerializer
+
 
 #
 class CategorySerializer(serializers.ModelSerializer):
@@ -36,6 +37,7 @@ class CourseSerializer(serializers.ModelSerializer):
         representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
         representation['saved_counter'] = instance.saved.count()
         representation['register_counter'] = instance.courseregister.count()
+        representation['adviser'] = AdviserSerializer(instance.adviser.all(), many=True).data
         return representation
 
 
@@ -77,18 +79,10 @@ class CourseRegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         user = self.context.get('request').user
         course = attrs.get('course')
-        course_from_models = CourseRegister.objects.filter(course=course, user=user)
-        if course_from_models:
-            Course.student_counter = 12
-            raise serializers.ValidationError('Вы уже подписаны на данный курс!')
-        return attrs
+        if CourseRegister.objects.filter(user=user, course=course).exists():
+            raise serializers.ValidationError('Вы уже записаны на данный курс')
 
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     instance.course.student_counter += 1
-    #     print(instance.course.student_counter)
-    #
-    #     return representation
+        return attrs
 
 
 class CourseRegisterListSerializer(serializers.ModelSerializer):
