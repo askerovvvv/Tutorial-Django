@@ -21,7 +21,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Password do not match')
         return attrs # Если все хорошо нужно возвращать все данные
 
-
     def create(self, validated_data): # логика регистрации
         user = User.objects.create_user(**validated_data) # принимает все данные которые прошли проверку
         code = user.activation_code  # наш активационный код передали новой переменной

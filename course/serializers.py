@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from course.models import *
-from lesson.serializers import AdviserSerializer
+from lesson.serializers import AdviserSerializer, LessonSerializer
 
 
 #
@@ -25,8 +25,8 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        representation = super().to_representation(instance)
         # representation['lessons'] = instance.les
+        representation = super().to_representation(instance)
         sum_of_description = 0
         #
         # for i in instance.review.all():
@@ -37,7 +37,7 @@ class CourseSerializer(serializers.ModelSerializer):
         #
         # representation['comments'] = sum_of_description
         representation['lessons'] = instance.lessons.count()
-
+        representation['adviser'] = AdviserSerializer(instance.adviser,).data
         return representation
 
     #     sum_of_description = 0
@@ -103,13 +103,20 @@ class CourseRegisterSerializer(serializers.ModelSerializer):
 
 class CourseRegisterListSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
-    course = CourseSerializer(read_only=True)
+    # course = CourseSerializer(read_only=True)
+    course = serializers.SerializerMethodField
 
     class Meta:
         model = CourseRegister
         fields = ('user', 'course')
 
-
+    # def get_course(self):
+    #     print(CourseRegister)
+    #     return (CourseRegister.user)
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['course'] = LessonSerializer(instance.course.lessons.all(), many=True).data
+        return representation
 class SearchHistorySerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -5,11 +5,24 @@ import course.models
 
 class Adviser(models.Model):
     name = models.CharField(max_length=30, verbose_name='Имя преподавателя')
-    course = models.ForeignKey('course.Course', related_name='adviser', on_delete=models.CASCADE)
+    course = models.OneToOneField('course.Course', related_name='adviser', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='imageadviser/', verbose_name='Фото преподователя', default=None, blank=True)
 
     def __str__(self):
         return self.name
+
+    # def save(self, *args, **kwargs):
+    #     from course.rating_average import adviser
+    #     # creating = not self.pk
+    #     # old_rating = self.rating
+    #     super().save(*args, **kwargs)
+    #     adviser(self.course)
+
+    # new_rating = self.rating
+    # if old_rating != new_rating or creating:
+    #     set_rating(self.course)
+    # if old_comment_count != new_comment_count or creating:
+    #     count_comment(self.course)
 
     class Meta:
         verbose_name = 'Преподователя'

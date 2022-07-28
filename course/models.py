@@ -25,6 +25,8 @@ class Course(models.Model):
     lessons = models.ManyToManyField(Lesson, related_name='lesson')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True, blank=True)
     comment = models.IntegerField(default=None, null=True, blank=True)
+    # adviser_name = models.CharField(max_length=30, null=True, blank=True)
+    # adviser_image = models.ImageField(upload_to='imageadviser/', default=None, blank=True,)
     # registered_student_count = models.IntegerField(default=None, null=True, blank=True)
 
     def __str__(self):
@@ -32,7 +34,7 @@ class Course(models.Model):
 
     class Meta:
         verbose_name = 'Курс'
-        verbose_name = 'Курсы'
+        verbose_name_plural = 'Курсы'
 
 
 class Review(models.Model):
