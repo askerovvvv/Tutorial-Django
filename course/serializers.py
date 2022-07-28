@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from course.models import *
-from lesson.serializers import GroupLessonSerializer, AdviserSerializer
+from lesson.serializers import AdviserSerializer
 
 
 #
@@ -17,29 +17,43 @@ class CourseSerializer(serializers.ModelSerializer):
     #     max_length=10000, allow_empty_file=False), write_only=True,
     #     min_length=1, max_length=5)
     likes = serializers.IntegerField(read_only=True)
+    # lessons = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
 
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        # representation['likes'] = instance.like.filter(like=True).count()
-
+        # representation['lessons'] = instance.les
         sum_of_description = 0
+        #
+        # for i in instance.review.all():
+        #     #     rating_result += int(i.rating)
+        #     if i.description:
+                # sum_of_description += 1
+        #     # print(instance.review.filter(description='!=null'))
+        #
+        # representation['comments'] = sum_of_description
+        representation['lessons'] = instance.lessons.count()
 
-        for i in instance.review.all():
-        #     rating_result += int(i.rating)
-            if i.description:
-                sum_of_description += 1
-        # print(instance.review.filter(description='!=null'))
-
-        representation['comments'] = sum_of_description
-        representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
-        representation['saved_counter'] = instance.saved.count()
-        representation['register_counter'] = instance.courseregister.count()
-        representation['adviser'] = AdviserSerializer(instance.adviser.all(), many=True).data
         return representation
+
+    #     sum_of_description = 0
+    #
+    #     for i in instance.review.all():
+    #     #     rating_result += int(i.rating)
+    #         if i.description:
+    #             sum_of_description += 1
+    #     # print(instance.review.filter(description='!=null'))
+    #
+    #     representation['comments'] = sum_of_description
+    #     # representation['counter_lesson'] = GroupLessonSerializer(instance.grouplesson.all(), many=True).data
+    #     representation['saved_counter'] = instance.saved.count()
+    #     representation['register_counter'] = instance.courseregister.count()
+    #     representation['adviser'] = AdviserSerializer(instance.adviser.all(), many=True).data
+    #     return representation
 
 
 class ReviewSerializer(serializers.ModelSerializer):

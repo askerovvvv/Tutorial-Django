@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from lesson.models import Adviser
+from lesson.models import Adviser, Lesson
+
 User = get_user_model()
 
 
@@ -22,6 +23,8 @@ class Course(models.Model):
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True, blank=True)
+    lessons = models.ManyToManyField(Lesson, related_name='lesson')
+    comment = models.IntegerField(default=None, null=True, blank=True)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '
@@ -41,16 +44,21 @@ class Review(models.Model):
     ])
 
     def save(self, *args, **kwargs):
-        from course.rating_average import set_rating
+        from course.rating_average import set_rating, count_comment
         creating = not self.pk
+        # old_comment_count = self.description
         old_rating = self.rating
         super().save(*args, **kwargs)
         new_rating = self.rating
+        new_comment_count = self.description
         if old_rating != new_rating or creating:
             set_rating(self.course)
 
+        count_comment(self.course)
+        # if old_comment_count != new_comment_count or creating:
+
     def __str__(self):
-        return f'От пользователя <<{self.user}>> поставлен <<{self.rating}>> к курсу <<{self.course}>>'
+        return f'{self.description}>>'
 
     class Meta:
         verbose_name = 'Отзыв'

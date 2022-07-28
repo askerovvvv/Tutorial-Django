@@ -42,7 +42,8 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all().annotate(likes=Count(Case(When(like__like=True, then=1)))).order_by('id')
+    queryset = Course.objects.all().annotate(likes=Count(Case(When(like__like=True, then=1)))).order_by('id').prefetch_related('lessons')
+
     serializer_class = CourseSerializer
 
     def get_permissions(self):

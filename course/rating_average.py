@@ -8,3 +8,8 @@ def set_rating(course):
     course.rating = rating
     course.save()
 
+def count_comment(course):
+    comment = Review.objects.filter(course=course, description__isnull=False).exists()
+    if comment:
+        course.comment += 1
+        course.save()
