@@ -1,6 +1,6 @@
 from django.db.models import Avg
 
-from course.models import Review
+from course.models import Review, CourseRegister
 
 
 def set_rating(course):
@@ -13,3 +13,8 @@ def count_comment(course):
     if comment:
         course.comment += 1
         course.save()
+
+# def count_registered_student(course):
+#     count_student = CourseRegister.objects.filter(course=course).count()
+#     course.registered_student_count = count_student
+#     course.save()

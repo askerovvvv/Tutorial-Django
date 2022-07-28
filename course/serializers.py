@@ -18,11 +18,11 @@ class CourseSerializer(serializers.ModelSerializer):
     #     min_length=1, max_length=5)
     likes = serializers.IntegerField(read_only=True)
     # lessons = serializers.SerializerMethodField(read_only=True)
+    student_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
-
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -80,7 +80,8 @@ class CourseRetrieveSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['Отзывы'] = ReviewSerializer(instance.review.all(), many=True).data
+        representation['comment'] = ReviewSerializer(instance.review.all(), many=True).data
+        representation['lessons'] = instance.lessons.count()
         return representation
 
 

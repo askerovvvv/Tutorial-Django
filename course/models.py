@@ -22,9 +22,10 @@ class Course(models.Model):
     name = models.CharField(max_length=30, verbose_name='Название курса')
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True, blank=True)
     lessons = models.ManyToManyField(Lesson, related_name='lesson')
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=None, null=True, blank=True)
     comment = models.IntegerField(default=None, null=True, blank=True)
+    # registered_student_count = models.IntegerField(default=None, null=True, blank=True)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '
@@ -46,16 +47,15 @@ class Review(models.Model):
     def save(self, *args, **kwargs):
         from course.rating_average import set_rating, count_comment
         creating = not self.pk
-        # old_comment_count = self.description
+        old_comment_count = self.description
         old_rating = self.rating
         super().save(*args, **kwargs)
         new_rating = self.rating
         new_comment_count = self.description
         if old_rating != new_rating or creating:
             set_rating(self.course)
-
-        count_comment(self.course)
-        # if old_comment_count != new_comment_count or creating:
+        if old_comment_count != new_comment_count or creating:
+            count_comment(self.course)
 
     def __str__(self):
         return f'{self.description}>>'
@@ -97,6 +97,14 @@ class SavedCourse(models.Model):
 class CourseRegister(models.Model):
     course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE, verbose_name='К какому курсу')
     user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE, verbose_name='Какой пользователь')
+
+    # def save(self, *args, **kwargs):
+    #     from course.rating_average import count_registered_student
+    #     creating = not self.pk
+    #     super().save(*args, **kwargs)
+    #     if creating:
+    #         count_registered_student(self.course)
+
 
     def __str__(self):
         return f'{self.user} сохранил курс ---> {self.course}'

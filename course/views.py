@@ -19,8 +19,7 @@ logger = logging.getLogger('')
 
 class ReviewViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
-
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().select_related('user')
     serializer_class = ReviewSerializer
 
     def create(self, request, *args, **kwargs):
@@ -42,8 +41,7 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all().annotate(likes=Count(Case(When(like__like=True, then=1)))).order_by('id').prefetch_related('lessons')
-
+    queryset = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).order_by('id').prefetch_related('lessons')
     serializer_class = CourseSerializer
 
     def get_permissions(self):
