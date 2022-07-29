@@ -27,7 +27,7 @@ class CourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         # representation['lessons'] = instance.les
         representation = super().to_representation(instance)
-        sum_of_description = 0
+        # sum_of_description = 0
         #
         # for i in instance.review.all():
         #     #     rating_result += int(i.rating)
@@ -104,7 +104,7 @@ class CourseRegisterSerializer(serializers.ModelSerializer):
 class CourseRegisterListSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
     # course = CourseSerializer(read_only=True)
-    course = serializers.SerializerMethodField
+    # course = serializers.SerializerMethodField
 
     class Meta:
         model = CourseRegister
@@ -117,6 +117,7 @@ class CourseRegisterListSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['course'] = LessonSerializer(instance.course.lessons.all(), many=True).data
         return representation
+
 class SearchHistorySerializer(serializers.ModelSerializer):
 
     class Meta:

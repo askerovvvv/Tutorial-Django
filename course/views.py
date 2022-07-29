@@ -46,7 +46,7 @@ class CourseViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = []
+            permissions = [IsAuthenticated]
         else:
             permissions = [IsAdminUser]
 
@@ -91,7 +91,7 @@ class CourseViewSet(ModelViewSet):
 class SavedCourseList(ListAPIView):
     permission_classes = [IsAuthenticated]
 
-    queryset = SavedCourse.objects.all()
+    queryset = SavedCourse.objects.all().select_related('course', 'user')
     serializer_class = SavedCourseSerializer
 
     def create(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class SavedCourseList(ListAPIView):
 
 
 class CourseRegisterViewSet(ModelViewSet):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     queryset = CourseRegister.objects.all().select_related('course', 'user')
     serializer_class = CourseRegisterSerializer
@@ -138,14 +138,14 @@ class CourseRegisterViewSet(ModelViewSet):
         serializer = CourseRegisterListSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     user = self.request.user
-    #     queryset = queryset.filter(user=user,)
-    #     return queryset
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        queryset = queryset.filter(user=user,)
+        return queryset
 
-    # def perform_create(self, serializer):
-    #     serializer.save(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class SearchHistoryList(ListAPIView):
