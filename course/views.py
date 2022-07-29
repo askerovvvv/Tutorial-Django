@@ -41,12 +41,12 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons')
+    queryset = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons').select_related('adviser')
     serializer_class = CourseSerializer
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = [IsAuthenticated]
+            permissions = []
         else:
             permissions = [IsAdminUser]
 

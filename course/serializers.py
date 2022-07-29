@@ -19,10 +19,14 @@ class CourseSerializer(serializers.ModelSerializer):
     likes = serializers.IntegerField(read_only=True)
     # lessons = serializers.SerializerMethodField(read_only=True)
     student_count = serializers.IntegerField(read_only=True)
+    # adviser = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
+    #
+    # def get_adviser(self, instance):
+    #     return AdviserSerializer(instance.adviser, ).data
 
     def to_representation(self, instance):
         # representation['lessons'] = instance.les
@@ -38,6 +42,7 @@ class CourseSerializer(serializers.ModelSerializer):
         # representation['comments'] = sum_of_description
         representation['lessons'] = instance.lessons.count()
         representation['adviser'] = AdviserSerializer(instance.adviser,).data
+        print(instance.adviser)
         return representation
 
     #     sum_of_description = 0

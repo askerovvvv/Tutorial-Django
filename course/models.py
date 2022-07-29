@@ -25,6 +25,7 @@ class Course(models.Model):
     lessons = models.ManyToManyField(Lesson, related_name='lesson')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, blank=True)
     comment = models.IntegerField(default=0, blank=True)
+    adviser = models.ForeignKey(Adviser, related_name='course', on_delete=models.PROTECT)
     # adviser_name = models.CharField(max_length=30, null=True, blank=True)
     # adviser_image = models.ImageField(upload_to='imageadviser/', default=None, blank=True,)
     # registered_student_count = models.IntegerField(default=None, null=True, blank=True)

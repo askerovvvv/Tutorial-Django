@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from course.models import Course, Category
-from lesson.models import GroupLesson, Lesson
+from lesson.models import Lesson, Adviser
 from lesson.serializers import LessonSerializer
 from django.urls import reverse
 from rest_framework import status
@@ -15,10 +15,10 @@ class LessonTestApiCase(APITestCase):
         self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True)
         self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False)
         self.category = Category.objects.create(slug='Programming')
-        self.course = Course.objects.create(name='Python', category=self.category)
-        self.grouplesson = GroupLesson.objects.create(name='1', course=self.course)
-        self.lesson1 = Lesson.objects.create(name='testlesson1', description='testdescription1', group_lesson=self.grouplesson)
-        self.lesson2 = Lesson.objects.create(name='testlesson1', description='testdescription1', group_lesson=self.grouplesson)
+        self.adviser2 = Adviser.objects.create(name='Adviser2', )
+        self.course = Course.objects.create(name='Python', category=self.category, adviser=self.adviser2)
+        self.lesson1 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
+        self.lesson2 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
         self.serializer_data = LessonSerializer(Lesson.objects.all(), many=True).data
 
         self.file_md = SimpleUploadedFile(
@@ -58,7 +58,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description for post request',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.post(url, data, format='multipart')
@@ -73,7 +72,6 @@ class LessonTestApiCase(APITestCase):
             'name': 'Test post 1',
             'description': 'description for post request',
             'file': self.file_md,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.post(url, data, format='multipart')
@@ -89,7 +87,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description for post request',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.post(url, data, format='multipart')
@@ -104,7 +101,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description for post request',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.post(url, data, format='multipart')
@@ -120,7 +116,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description AFTER UPDATE',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.put(url, data)
@@ -139,7 +134,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description AFTER UPDATE',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.put(url, data)
@@ -155,7 +149,6 @@ class LessonTestApiCase(APITestCase):
             'description': 'description AFTER UPDATE',
             'file': self.file_md,
             'video': self.video_file,
-            'group_lesson': self.grouplesson.id
         }
 
         response = self.client.put(url, data)
