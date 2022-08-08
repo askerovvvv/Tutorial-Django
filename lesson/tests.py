@@ -8,9 +8,12 @@ from lesson.models import Lesson, Adviser
 from lesson.serializers import LessonSerializer
 from django.urls import reverse
 from rest_framework import status
+
 User = get_user_model()
 
+
 class LessonTestApiCase(APITestCase):
+    """Crud test for Lesson"""
     def setUp(self):
         self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True)
         self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False)

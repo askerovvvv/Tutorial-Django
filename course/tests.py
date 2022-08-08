@@ -1,55 +1,30 @@
-import json
-import tempfile
 import io
 
-from io import StringIO
-
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib.auth import get_user_model
-from django.core.files import File
-from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Count, Case, When
-from django.db.models.fields.files import ImageFieldFile
-from django.test import TestCase
-from rest_framework import status
-# from StringIO import StringIO
-# in python 3: from io import StringIO
-from PIL import Image
-from django.core.files.base import File
-from rest_framework.test import APITestCase, URLPatternsTestCase
 
-from django.urls import include, path, reverse
+from django.db.models import Count, Case, When
+from rest_framework import status
+from PIL import Image
+
+from rest_framework.test import APITestCase
+
+from django.urls import reverse
 from course.models import Course, Category, Review
 from course.rating_average import set_rating
-from course.serializers import CourseSerializer, CategorySerializer, ReviewSerializer
+from course.serializers import CourseSerializer, ReviewSerializer
 
 import json
 
-# class Object:
-#     def toJSON(self):
-#         return json.dumps(self, default=lambda o: o.__dict__,
-#             sort_keys=True, indent=4)
-#
-# class ExtendedEncoder(DjangoJSONEncoder):
-#     def default(self, o):
-#         if isinstance(o, ImageFieldFile):
-#             return str(o)
-#         else:
-#             return super().default(o)
-#
 from lesson.models import Adviser, Lesson
 
 User = get_user_model()
 
 
 class CourseTestApiCase(APITestCase):
-    # urlpatterns = [
-    #     path('api/', include('course.urls')),
-    # ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+    """
+    crud test for Course
+    """
     def setUp(self):
         self.category = Category.objects.create(slug='Programming')
         self.lesson1 = Lesson.objects.create(name='lesson1', )
@@ -170,6 +145,9 @@ class CourseTestApiCase(APITestCase):
 
 
 class ReviewTestApiCase(APITestCase):
+    """
+    Crud test for Review
+    """
     def setUp(self):
         self.category = Category.objects.create(slug='Programming')
         self.adviser1 = Adviser.objects.create(name='Adviser1', )

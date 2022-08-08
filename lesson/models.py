@@ -11,19 +11,6 @@ class Adviser(models.Model):
     def __str__(self):
         return self.name
 
-    # def save(self, *args, **kwargs):
-    #     from course.rating_average import adviser
-    #     # creating = not self.pk
-    #     # old_rating = self.rating
-    #     super().save(*args, **kwargs)
-    #     adviser(self.course)
-
-    # new_rating = self.rating
-    # if old_rating != new_rating or creating:
-    #     set_rating(self.course)
-    # if old_comment_count != new_comment_count or creating:
-    #     count_comment(self.course)
-
     class Meta:
         verbose_name = 'Преподователя'
         verbose_name_plural = 'Преподователи'

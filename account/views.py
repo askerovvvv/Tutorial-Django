@@ -17,6 +17,9 @@ User = get_user_model()
 
 
 class RegisterApiView(APIView):
+    """
+    API for register User after it will send message to user email
+    """
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -27,6 +30,9 @@ class RegisterApiView(APIView):
 
 
 class ActivationView(APIView):
+    """
+    For activate user, it will in user's email like link
+    """
     def get(self, request, activation_code):
         try:
             user = User.objects.get(activation_code=activation_code)
@@ -39,6 +45,9 @@ class ActivationView(APIView):
 
 
 class ForgotPasswordApiView(APIView):
+    """
+    It will send activation code to user's email he must save it
+    """
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -47,6 +56,9 @@ class ForgotPasswordApiView(APIView):
 
 
 class ForgotPasswordCompleteApiView(APIView):
+    """
+    user writes activation code that has sent before and after user can change password
+    """
     def post(self, request):
         serializer = ForgotPasswordCompleteSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -55,6 +67,9 @@ class ForgotPasswordCompleteApiView(APIView):
 
 
 class UserProfile(ListAPIView):
+    """
+    Usual User profile
+    """
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 

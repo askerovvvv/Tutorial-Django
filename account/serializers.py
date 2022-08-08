@@ -8,28 +8,34 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Usual RegisterSerializer
+    """
+
     password2 = serializers.CharField(min_length=6, write_only=True, required=True)
     class Meta:
         model = User
         fields = ('email', 'password', 'password2')
 
-    def validate(self, attrs): # в 'attrs' прилетает то что мы отослали(email, password, password2) VALIDATE - проверка
-        password = attrs.get('password') # данные 1 пароля
-        password2 = attrs.pop('password2') # удаляем 2 пароль и сохраняем в переменной
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password2 = attrs.pop('password2')
 
         if password != password2:
             raise serializers.ValidationError('Password do not match')
-        return attrs # Если все хорошо нужно возвращать все данные
+        return attrs
 
-    def create(self, validated_data): # логика регистрации
-        user = User.objects.create_user(**validated_data) # принимает все данные которые прошли проверку
-        code = user.activation_code  # наш активационный код передали новой переменной
-
-        send_confirmation_email(code, user.email) # delay - указывает что он будет работать с celery
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        code = user.activation_code
+        send_confirmation_email(code, user.email)
         return user
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
+    """
+    Serializer checks email if email in database it will send activation code to change password
+    """
     email = serializers.EmailField(required=True)
 
     def validate_email(self, email):
@@ -51,6 +57,10 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 
 class ForgotPasswordCompleteSerializer(serializers.Serializer):
+    """
+    Serializer checks email if email in database it will check password1 and password2 if it is True Serializer change
+    password
+    """
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
     password2 = serializers.CharField(required=True, min_length=6)
@@ -84,6 +94,9 @@ class ForgotPasswordCompleteSerializer(serializers.Serializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    Usual Serializer for user Serializer it shows now all fields
+    """
     class Meta:
         model = User
         fields = ('date_joined', 'email', 'is_active', 'is_superuser')

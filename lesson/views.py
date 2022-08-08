@@ -7,12 +7,18 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 
 class LessonViewSet(ModelViewSet):
+    """
+    Ussual viewset for crud for the model Lesson
+    """
     permission_classes = [IsAdminUser]
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
 
 class AdviserViewSet(ModelViewSet):
+    """
+    Ussual viewset for crud for the model Adviser, but to create adviser user must be superuser
+    """
     queryset = Adviser.objects.all()
     serializer_class = AdviserSerializer
 

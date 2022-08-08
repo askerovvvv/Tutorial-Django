@@ -8,6 +8,9 @@ User = get_user_model()
 
 
 class Category(models.Model):
+    """
+    Usual Model
+    """
     slug = models.SlugField()
 
     def __str__(self):
@@ -15,10 +18,14 @@ class Category(models.Model):
 
     class Meta:
         verbose_name = 'Категория'
-        verbose_name = 'Категории'
+        verbose_name_plural = 'Категории'
 
 
 class Course(models.Model):
+    """
+    Main model in this project, rating and commen will be filled in automatically by others functions,
+
+    """
     name = models.CharField(max_length=30, verbose_name='Название курса')
     category = models.ForeignKey(Category, related_name='course', on_delete=models.CASCADE, verbose_name='Категория курса')
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
@@ -26,9 +33,6 @@ class Course(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, blank=True)
     comment = models.IntegerField(default=0, blank=True)
     adviser = models.ForeignKey(Adviser, related_name='course', on_delete=models.PROTECT)
-    # adviser_name = models.CharField(max_length=30, null=True, blank=True)
-    # adviser_image = models.ImageField(upload_to='imageadviser/', default=None, blank=True,)
-    # registered_student_count = models.IntegerField(default=None, null=True, blank=True)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '
@@ -39,6 +43,9 @@ class Course(models.Model):
 
 
 class Review(models.Model):
+    """
+    Usual model Review, function save for class Course fields comment and rating,
+    """
     course = models.ForeignKey(Course, related_name='review', on_delete=models.CASCADE, verbose_name='К какому курсу рейтинг')
     user = models.ForeignKey(User, related_name='review', on_delete=models.CASCADE, verbose_name='Владелец рейтинга')
     description = models.CharField(max_length=300, blank=True, verbose_name='Комментарий')
@@ -69,6 +76,9 @@ class Review(models.Model):
 
 
 class Like(models.Model):
+    """
+    Usual model Like
+    """
     course = models.ForeignKey(Course, related_name='like', on_delete=models.CASCADE, verbose_name='К какому курсу лайк')
     user = models.ForeignKey(User, related_name='like', on_delete=models.CASCADE, verbose_name='Владелец лайка')
     like = models.BooleanField(default=False, verbose_name='Сам лайк')
@@ -82,6 +92,9 @@ class Like(models.Model):
 
 
 class SavedCourse(models.Model):
+    """
+    Usual model SavedCourse
+    """
     course = models.ForeignKey(Course, related_name='saved', on_delete=models.CASCADE, verbose_name='Курс для сохранение')
     user = models.ForeignKey(User, related_name='saved', on_delete=models.CASCADE, verbose_name='Пользователь')
     saved = models.BooleanField(default=False, verbose_name='Сохранить')
@@ -98,16 +111,11 @@ class SavedCourse(models.Model):
 
 
 class CourseRegister(models.Model):
+    """
+    Usual model CourseRegister
+    """
     course = models.ForeignKey(Course, related_name='courseregister', on_delete=models.CASCADE, verbose_name='К какому курсу')
     user = models.ForeignKey(User, related_name='courseregister', on_delete=models.CASCADE, verbose_name='Какой пользователь')
-
-    # def save(self, *args, **kwargs):
-    #     from course.rating_average import count_registered_student
-    #     creating = not self.pk
-    #     super().save(*args, **kwargs)
-    #     if creating:
-    #         count_registered_student(self.course)
-
 
     def __str__(self):
         return f'{self.user} сохранил курс ---> {self.course}'
@@ -118,6 +126,9 @@ class CourseRegister(models.Model):
 
 
 class SearchHistory(models.Model):
+    """
+    Usual model SearchHistory
+    """
     user = models.ForeignKey(User, related_name='searchhistory', on_delete=models.CASCADE, verbose_name='К какому пользователю принадлежит')
     item = models.CharField(max_length=50, verbose_name='Название для поиска')
 

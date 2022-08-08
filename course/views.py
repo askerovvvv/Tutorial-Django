@@ -18,6 +18,9 @@ logger = logging.getLogger('')
 
 
 class ReviewViewSet(ModelViewSet):
+    """
+    crud for the model Review, when get request user will get only his review, and here logger with warning level
+    """
     permission_classes = [IsAuthenticated]
     queryset = Review.objects.all().select_related('user')
     serializer_class = ReviewSerializer
@@ -41,6 +44,11 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
+    """
+    crud for the model Course, with annotate to get likes and with prefetch_related, select_related
+    to optimize sql requests, when user get all course there will be number of descriptions but when user
+    get course by ID there will be all descriptions, and here logger with warning level
+    """
     queryset = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons').select_related('adviser')
     serializer_class = CourseSerializer
 
@@ -89,6 +97,10 @@ class CourseViewSet(ModelViewSet):
 
 
 class SavedCourseList(ListAPIView):
+    """
+    ListApiView the model SavedCourse, user must be authenticated, here used select_related
+    to optimize sql request, and here logger with warning level, to save some course user use CourseViewSet
+    """
     permission_classes = [IsAuthenticated]
 
     queryset = SavedCourse.objects.all().select_related('course', 'user')
@@ -112,6 +124,10 @@ class SavedCourseList(ListAPIView):
 
 
 class CourseRegisterViewSet(ModelViewSet):
+    """
+    viewset for crud for the model CourseRegister, here used select_related to optimize sql requests,
+    also here user logger with warning level
+    """
     permission_classes = [IsAuthenticated]
 
     queryset = CourseRegister.objects.all().select_related('course', 'user')
@@ -149,6 +165,9 @@ class CourseRegisterViewSet(ModelViewSet):
 
 
 class SearchHistoryList(ListAPIView):
+    """
+    ListApiView for SearchHistory, will show only last 3 search course,
+    """
     permission_classes = [IsAuthenticated]
     queryset = SearchHistory.objects.all()
     serializer_class = SearchHistorySerializer
