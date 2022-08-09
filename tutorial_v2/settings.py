@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
 
-    'account',
+    'custom_account',
     'course',
     'lesson'
 
@@ -108,7 +108,7 @@ ROOT_URLCONF = 'tutorial_v2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [], # BASE_DIR / 'templates'
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -186,27 +186,29 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
 
-AUTH_USER_MODEL = 'account.CustomUser'
+AUTH_USER_MODEL = 'custom_account.CustomUser'
 
 # AUTHENTICATION_BACKENDS = [
 #     'django.contrib.auth.backends.ModelBackend',
-#     'allauth.account.auth_backends.AuthenticationBackend'
+#     'allauth.account.auth_backends.AuthenticationBackend',
+#     'custom_account.CustomUser'
 # ]
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'SCOPE': [
-#             'profile',
-#             'email',
-#         ],
-#         'AUTH_PARAMS': {
-#             'access_type': 'online',
-#         }
-#     }
-# }
-# SITE_ID = 2
-#
-# LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/'
+
+    # SOCIALACCOUNT_PROVIDERS = {
+    #     'google': {
+    #         'SCOPE': [
+    #             'profile',
+    #             'email',
+    #         ],
+    #         'AUTH_PARAMS': {
+    #             'access_type': 'online',
+    #         }
+    #     }
+    # }
+    # SITE_ID = 2
+    #
+    # LOGIN_REDIRECT_URL = '/'
+    # LOGOUT_REDIRECT_URL = '/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -217,6 +219,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=4),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
 }
+
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

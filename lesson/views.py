@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 
+from course.permission import IsTeacherUser
 from lesson.models import *
 from lesson.serializers import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -10,7 +11,7 @@ class LessonViewSet(ModelViewSet):
     """
     Ussual viewset for crud for the model Lesson
     """
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsTeacherUser]
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 

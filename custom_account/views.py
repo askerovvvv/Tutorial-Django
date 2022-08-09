@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 
-from account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer, \
+from custom_account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer, \
     UserProfileSerializer
 
 User = get_user_model()
