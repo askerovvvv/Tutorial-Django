@@ -10,7 +10,7 @@ def set_rating(course):
     course.save()
 
 def count_comment(course):
-    comment = Review.objects.filter(course=course, description__isnull=True).exists()
+    comment = Review.objects.filter(course=course, description__exact='').count()
     print(comment)
     if comment:
         print('++++++++++++++++++++++++++++++++++++')

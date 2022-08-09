@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from course.models import *
+from course.permission import IsTeacherUser
 from course.serializers import *
 
 logger = logging.getLogger('')
@@ -49,12 +50,15 @@ class CourseViewSet(ModelViewSet):
     to optimize sql requests, when user get all course there will be number of descriptions but when user
     get course by ID there will be all descriptions, and here logger with warning level
     """
-    queryset = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons').select_related('adviser')
+    queryset = Course.objects.all().annotate(student_count=Count('courseregister'),
+                                             likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons').select_related('adviser')
     serializer_class = CourseSerializer
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve', 'saved', 'like']:
-            permissions = []
+            permissions = [IsAuthenticated]
+        elif self.action in ['update', 'put', 'partial_update']:
+            permissions = [IsTeacherUser]
         else:
             permissions = [IsAdminUser]
 

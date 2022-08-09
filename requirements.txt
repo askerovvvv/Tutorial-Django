@@ -20,3 +20,4 @@ python-json-logger
 django-debug-toolbar
 
 
+django-allauth
