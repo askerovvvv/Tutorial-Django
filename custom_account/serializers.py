@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from rest_framework import serializers
 
+from course.models import Course
+from course.serializers import CourseSerializer
 from custom_account.send_mail import send_confirmation_email
 
 User = get_user_model()
@@ -40,7 +42,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
     def validate_email(self, email):
         if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Аккаунт не найден!')
+            raise serializers.ValidationError('Account not found!')
         return email
 
     def send_code(self):
@@ -49,8 +51,8 @@ class ForgotPasswordSerializer(serializers.Serializer):
         user.create_activation_code()
         user.save()
         send_mail(
-            'Восстановление пароля Tutorial_v2',
-            f'Код подтверждение:{user.activation_code}',
+            'Password recovery Tutorial_v2',
+            f'Confirmation code:{user.activation_code}',
             'bekbol.2019@gmail.com',
             [email]
         )
@@ -68,7 +70,7 @@ class ForgotPasswordCompleteSerializer(serializers.Serializer):
 
     def validate_email(self, email):
         if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Аккаунт не найден!')
+            raise serializers.ValidationError('Account not found!')
         return email
 
     def validate(self, attrs):
@@ -78,10 +80,10 @@ class ForgotPasswordCompleteSerializer(serializers.Serializer):
         email = attrs.get('email')
 
         if password != password2:
-            raise serializers.ValidationError('Пароли не совпадают!')
+            raise serializers.ValidationError('Passwords do not match!')
 
         if not User.objects.filter(activation_code=code, email=email).exists():
-            raise serializers.ValidationError('Неверный активационный код!')
+            raise serializers.ValidationError('Invalid activation code!')
         return attrs
 
     def create_new_password(self):
@@ -97,7 +99,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
     Usual Serializer for user Serializer it shows now all fields
     """
+    # a = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('date_joined', 'email', 'is_active', 'is_superuser')
+        fields = ('date_joined', 'email', 'is_active', 'is_superuser', )
 
+    # def get_a(self, instance):
+    #     course = Course.objects.filter(adviser=instance)
+    #     if course:
+    #         return CourseSerializer(course)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        course = Course.objects.filter(adviser=instance)
+        if course:
+            representation['my_course'] = CourseSerializer(instance.course.all(), many=True).data
+        return representation

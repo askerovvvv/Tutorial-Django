@@ -13,15 +13,6 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = '__all__'
 
-
-class AdviserSerializer(serializers.ModelSerializer):
-    """
-    Usual serializer for Adviser
-    """
-    class Meta:
-        model = Adviser
-        fields = '__all__'
-
 #
 # class GroupLessonSerializer(serializers.ModelSerializer):
 #

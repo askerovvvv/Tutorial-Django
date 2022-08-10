@@ -72,6 +72,31 @@ class CourseViewSet(ModelViewSet):
             SearchHistory.objects.create(user=self.request.user, item=search)
         return queryset
 
+    def update(self, request, *args, **kwargs):
+        if self.get_object().adviser != request.user:
+            raise ValueError('You are not teacher of this course')
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        if self.get_object().adviser != request.user:
+            raise ValueError('You are not teacher of this course')
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = CourseRetrieveSerializer(instance)
@@ -94,9 +119,9 @@ class CourseViewSet(ModelViewSet):
         saved_obj, _ = SavedCourse.objects.get_or_create(course=course, user=request.user)
         saved_obj.saved = not saved_obj.saved
         saved_obj.save()
-        status = 'Добавлен в сохраненные'
+        status = 'Added to saved'
         if not saved_obj.saved:
-            status = 'Удалено из сохраненных'
+            status = 'Removed from saved'
         return Response({'status': status})
 
 

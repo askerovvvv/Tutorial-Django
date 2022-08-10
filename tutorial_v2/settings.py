@@ -108,7 +108,7 @@ ROOT_URLCONF = 'tutorial_v2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [], #BASE_DIR / 'templates'
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,7 +131,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tutorial_v2',
-        'USER': 'postgres',
+        'USER': 'hello',
         'PASSWORD': '1',
         'HOST': 'localhost',
         'PORT': 5432

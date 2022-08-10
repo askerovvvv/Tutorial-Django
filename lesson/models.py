@@ -2,18 +2,18 @@ from django.db import models
 
 import course.models
 
+#
+# class Adviser(models.Model):
+#     name = models.CharField(max_length=30, verbose_name='Имя преподавателя')
+#     # course = models.ForeignKey('course.Course', related_name='adviser', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='imageadviser/', verbose_name='Фото преподователя', default=None, blank=True)
+#
+#     def __str__(self):
+#         return self.name
 
-class Adviser(models.Model):
-    name = models.CharField(max_length=30, verbose_name='Имя преподавателя')
-    # course = models.ForeignKey('course.Course', related_name='adviser', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='imageadviser/', verbose_name='Фото преподователя', default=None, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Преподователя'
-        verbose_name_plural = 'Преподователи'
+    # class Meta:
+    #     verbose_name = 'Преподователя'
+    #     verbose_name_plural = 'Преподователи'
 
 #
 # class GroupLesson(models.Model):
@@ -42,3 +42,4 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+

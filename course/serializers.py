@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from course.models import *
-from lesson.serializers import AdviserSerializer, LessonSerializer
+from lesson.serializers import LessonSerializer
 
 
 #
@@ -28,7 +28,8 @@ class CourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['lessons'] = instance.lessons.count()
-        representation['adviser'] = AdviserSerializer(instance.adviser,).data
+        # print(instance.adviser)
+        # representation['adviser'] = instance.
         return representation
 
 
@@ -83,7 +84,7 @@ class CourseRegisterSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         course = attrs.get('course')
         if CourseRegister.objects.filter(user=user, course=course).exists():
-            raise serializers.ValidationError('Вы уже записаны на данный курс')
+            raise serializers.ValidationError('You are already enrolled in this course')
 
         return attrs
 

@@ -16,21 +16,21 @@ class LessonViewSet(ModelViewSet):
     serializer_class = LessonSerializer
 
 
-class AdviserViewSet(ModelViewSet):
-    """
-    Ussual viewset for crud for the model Adviser, but to create adviser user must be superuser
-    """
-    queryset = Adviser.objects.all()
-    serializer_class = AdviserSerializer
-
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            permissions = [IsAuthenticated]
-        else:
-            permissions = [IsAdminUser]    
-        
-        return [permission() for permission in permissions]
-
+# class AdviserViewSet(ModelViewSet):
+#     """
+#     Ussual viewset for crud for the model Adviser, but to create adviser user must be superuser
+#     """
+#     queryset = Adviser.objects.all()
+#     serializer_class = AdviserSerializer
+#
+#     def get_permissions(self):
+#         if self.action in ['list', 'retrieve']:
+#             permissions = [IsAuthenticated]
+#         else:
+#             permissions = [IsAdminUser]
+#
+#         return [permission() for permission in permissions]
+#
 
 # class GroupLessonViewSet(ModelViewSet):
 #     queryset = GroupLesson.objects.all()
