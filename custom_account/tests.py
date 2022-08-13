@@ -20,7 +20,7 @@ class AccountTestCase(TestCase):
         url = reverse('register')
         response = self.client.post(url, self.user)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        self.assertEqual('Вы успешно зарегистрированы. Вам отправлено письмо с активизацией', response.data)
+        self.assertEqual('You have successfully registered. An activation email has been sent to you.', response.data)
         self.assertTrue(1, User.objects.all().count())
 
     def test_invalid_register(self):

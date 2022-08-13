@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from course.models import Course, Category
-from lesson.models import Lesson, Adviser
+from lesson.models import Lesson
 from lesson.serializers import LessonSerializer
 from django.urls import reverse
 from rest_framework import status
@@ -15,11 +15,10 @@ User = get_user_model()
 class LessonTestApiCase(APITestCase):
     """Crud test for Lesson"""
     def setUp(self):
-        self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True)
-        self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False)
+        self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True, is_teacher=True)
+        self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False, is_teacher=True)
         self.category = Category.objects.create(slug='Programming')
-        self.adviser2 = Adviser.objects.create(name='Adviser2', )
-        self.course = Course.objects.create(name='Python', category=self.category, adviser=self.adviser2)
+        self.course = Course.objects.create(name='Python', category=self.category, adviser=self.user)
         self.lesson1 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
         self.lesson2 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
         self.serializer_data = LessonSerializer(Lesson.objects.all(), many=True).data
@@ -98,6 +97,7 @@ class LessonTestApiCase(APITestCase):
         self.assertEqual(2, Lesson.objects.all().count())
 
     def test_invalid_post_without_authenticate(self):
+        # self.client.force_authenticate(user=self.user2)
         url = reverse('lesson-list')
         data = {
             'name': 'Test post 1',

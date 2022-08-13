@@ -16,7 +16,7 @@ from course.serializers import CourseSerializer, ReviewSerializer
 
 import json
 
-from lesson.models import Adviser, Lesson
+from lesson.models import Lesson
 
 User = get_user_model()
 
