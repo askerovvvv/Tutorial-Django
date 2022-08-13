@@ -53,6 +53,6 @@ class CustomUser(AbstractUser):
         code = str(uuid.uuid4())
         self.activation_code = code
 
-
+# TODO: user profile using signals
 # class UserProfile(models.Model)
 #     user = models.Fo

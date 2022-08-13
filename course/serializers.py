@@ -18,12 +18,21 @@ class CourseSerializer(serializers.ModelSerializer):
     """
     Serializer for Course, here used to_representation to get other fields from other classes,
     """
-    likes = serializers.IntegerField(read_only=True)
+    likes = serializers.SerializerMethodField(read_only=True)
+    saveds = serializers.SerializerMethodField(read_only=True)
     student_count = serializers.IntegerField(read_only=True)
+    # com = serializers.IntegerField(read_only=True)
+    # allocated = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
+
+    def get_likes(self, instance):
+        return instance.like.filter(like=True).count()
+
+    def get_saveds(self, instance):
+        return instance.saved.filter(saved=True).count()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models import Q, Count, Case, When
+from django.db.models import Q, Count, Case, When, ExpressionWrapper
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import action
@@ -43,6 +43,12 @@ class ReviewViewSet(ModelViewSet):
         queryset = queryset.filter(user=user)
         return queryset
 
+# .annotate(student_count=Count('courseregister', distinct=True), сom=Count(Case(When(review__description=True, then=1,))),
+#                                              likes=Count(Case(When(like__like=True, then=1), distinct=True))).prefetch_related('lessons').select_related('adviser')
+
+# (com=Count('review__description', filter=Q(review__description__isnull=False)),
+#                                              allocated=Count('pk', filter=Q(review__description__isnull=None))
+#                                              )
 
 class CourseViewSet(ModelViewSet):
     """
@@ -50,8 +56,9 @@ class CourseViewSet(ModelViewSet):
     to optimize sql requests, when user get all course there will be number of descriptions but when user
     get course by ID there will be all descriptions, and here logger with warning level
     """
-    queryset = Course.objects.all().annotate(student_count=Count('courseregister'),
-                                             likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons').select_related('adviser')
+    queryset = Course.objects.all().annotate(student_count=Count('courseregister', distinct=True)
+                                             ).prefetch_related('lessons').select_related('adviser')
+
     serializer_class = CourseSerializer
 
     def get_permissions(self):

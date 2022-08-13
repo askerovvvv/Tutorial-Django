@@ -31,7 +31,7 @@ class Course(models.Model):
     course_image = models.ImageField(upload_to='courseimage/', verbose_name='Фото курса')
     lessons = models.ManyToManyField(Lesson, related_name='lesson')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, blank=True)
-    comment = models.IntegerField(default=0, blank=True)
+    comment = models.IntegerField(default=0, blank=True, )
     adviser = models.ForeignKey(User, related_name='course', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -55,17 +55,17 @@ class Review(models.Model):
     ])
 
     def save(self, *args, **kwargs):
-        from course.rating_average import set_rating, count_comment
+        from course.rating_average import set_rating
         creating = not self.pk
-        old_comment_count = self.description
+        # old_comment_count = self.description
         old_rating = self.rating
         super().save(*args, **kwargs)
         new_rating = self.rating
-        new_comment_count = self.description
+        # new_comment_count = self.description
         if old_rating != new_rating or creating:
             set_rating(self.course)
-        if old_comment_count != new_comment_count or creating:
-            count_comment(self.course)
+        # if old_comment_count != new_comment_count or creating:
+        #     count_comment(self.course)
 
     def __str__(self):
         return f'{self.description}>>'
