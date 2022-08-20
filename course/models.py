@@ -32,7 +32,7 @@ class Course(models.Model):
     lessons = models.ManyToManyField(Lesson, related_name='lesson')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, blank=True)
     comment = models.IntegerField(default=0, blank=True, )
-    adviser = models.ForeignKey(User, related_name='course', on_delete=models.PROTECT)
+    # adviser = models.ForeignKey(User, related_name='course', on_delete=models.PROTECT)
 
     def __str__(self):
         return f'Курс-{self.name}, принадлежит к категории '

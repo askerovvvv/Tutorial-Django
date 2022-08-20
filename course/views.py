@@ -1,6 +1,7 @@
 import logging
 
 from django.db.models import Q, Count, Case, When, ExpressionWrapper
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import action
@@ -12,8 +13,9 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from course.models import *
-from course.permission import IsTeacherUser
+# from course.permission import IsTeacherUser
 from course.serializers import *
+from django.core.cache import cache
 
 logger = logging.getLogger('')
 
@@ -57,7 +59,7 @@ class CourseViewSet(ModelViewSet):
     get course by ID there will be all descriptions, and here logger with warning level
     """
     queryset = Course.objects.all().annotate(student_count=Count('courseregister', distinct=True)
-                                             ).prefetch_related('lessons').select_related('adviser')
+                                             ).prefetch_related('lessons')#.select_related('adviser')
 
     serializer_class = CourseSerializer
 
@@ -65,7 +67,7 @@ class CourseViewSet(ModelViewSet):
         if self.action in ['list', 'retrieve', 'saved', 'like']:
             permissions = [IsAuthenticated]
         elif self.action in ['update', 'put', 'partial_update']:
-            permissions = [IsTeacherUser]
+            permissions = [IsAdminUser]
         else:
             permissions = [IsAdminUser]
 
@@ -83,7 +85,7 @@ class CourseViewSet(ModelViewSet):
         serializer.save()
 
     def partial_update(self, request, *args, **kwargs):
-        if self.get_object().adviser != request.user:
+        if self.get_object().adviser == request.user:
             raise ValueError('You are not teacher of this course')
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
@@ -164,18 +166,31 @@ class CourseRegisterViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        # queryset = CourseRegister.objects.all()
+        # serializer = CourseRegisterListSerializer(data=queryset, many=True)
+        # serializer.is_valid(raise_exception=True)
+        # return Response(serializer.data)
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = CourseRegisterListSerializer(queryset, many=True)
-        return Response(serializer.data)
+        # if 'course' in cache:
+            # course = cache.get('course')
+            # serializer = CourseRegisterListSerializer(course, many=True)
+            # print("+++++++++++++++++++++++++++")
+            # return JsonResponse(serializer.data, safe=False)
+        # else:
+            queryset = self.filter_queryset(self.get_queryset())
+            # cache.set('course', queryset, timeout=20)
+        # TODO: cache for every user
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            print('LFeflewfowfwko')
+            serializer = CourseRegisterListSerializer(queryset, many=True)
+            return Response(serializer.data)
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        print(queryset)
         user = self.request.user
         queryset = queryset.filter(user=user,)
         return queryset
@@ -198,5 +213,6 @@ class SearchHistoryList(ListAPIView):
         if queryset.count() > 3:
             queryset.order_by('-pk').reverse()[0].delete()
         return queryset
-
-
+# redis-server
+# redis-cli ping
+#  redis-cli -n 1

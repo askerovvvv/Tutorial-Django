@@ -30,10 +30,10 @@ class CourseTestApiCase(APITestCase):
         self.lesson1 = Lesson.objects.create(name='lesson1', )
         self.user = User.objects.create(email='testsuperuser@gmail.com', is_staff=True)
         self.user2 = User.objects.create(email='testuser@gmail.com')
-        self.adviser1 = Adviser.objects.create(name='Adviser1',)
-        self.adviser2 = Adviser.objects.create(name='Adviser2',)
-        self.course1 = Course.objects.create(name='Python', category=self.category, adviser=self.adviser2)
-        self.course2 = Course.objects.create(name='JS', category=self.category, adviser=self.adviser1 )
+        # self.adviser1 = Adviser.objects.create(name='Adviser1',)
+        # self.adviser2 = Adviser.objects.create(name='Adviser2',)
+        self.course1 = Course.objects.create(name='Python', category=self.category, )
+        self.course2 = Course.objects.create(name='JS', category=self.category,)
         course = Course.objects.all().annotate(student_count=Count('courseregister'), likes=Count(Case(When(like__like=True, then=1)))).prefetch_related('lessons')
 
         self.serializer_data = CourseSerializer(course, many=True).data
@@ -66,7 +66,7 @@ class CourseTestApiCase(APITestCase):
             'lessons': self.lesson1.id,
             'rating': 0,
             'comment': 0,
-            'adviser': self.adviser1.id
+            # 'adviser': self.adviser1.id
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, self.data, format='multipart')
@@ -85,7 +85,7 @@ class CourseTestApiCase(APITestCase):
             'lessons': self.lesson1.id,
             'rating': 0,
             'comment': 0,
-            'adviser': self.adviser1.id
+            # 'adviser': self.adviser1.id
         }
         self.client.force_authenticate(user=self.user2)
         response = self.client.post(url, self.data, format='multipart')
@@ -103,7 +103,7 @@ class CourseTestApiCase(APITestCase):
             'lessons': self.lesson1.id,
             'rating': 0,
             'comment': 0,
-            'adviser': self.adviser1.id
+            # 'adviser': self.adviser1.id
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.put(url, self.data, format='multipart')
@@ -121,7 +121,7 @@ class CourseTestApiCase(APITestCase):
             'lessons': self.lesson1.id,
             'rating': 0,
             'comment': 0,
-            'adviser': self.adviser1.id
+            # 'adviser': self.adviser1.id
         }
         self.client.force_authenticate(user=self.user2)
         response = self.client.put(url, self.data, format='multipart')
@@ -150,14 +150,14 @@ class ReviewTestApiCase(APITestCase):
     """
     def setUp(self):
         self.category = Category.objects.create(slug='Programming')
-        self.adviser1 = Adviser.objects.create(name='Adviser1', )
-        self.course = Course.objects.create(name='Python', category=self.category, adviser=self.adviser1)
+        # self.adviser1 = Adviser.objects.create(name='Adviser1', )
+        self.course = Course.objects.create(name='Python', category=self.category,)
         self.user = User.objects.create_user(email='test1@gmail.com', password='123345631')
         self.user2 = User.objects.create_user(email='test2@gmail.com', password='4124132')
         self.review1 = Review.objects.create(course=self.course, user=self.user, description='testreview1,', rating=5)
         self.review2 = Review.objects.create(course=self.course, user=self.user2, description='rqwfq,', rating=3)
         self.serializer_data = ReviewSerializer(Review.objects.all(), many=True).data
-        self.adviser2 = Adviser.objects.create(name='Adviser2', )
+        # self.adviser2 = Adviser.objects.create(name='Adviser2', )
 
     def test_ok(self):
         set_rating(self.course)

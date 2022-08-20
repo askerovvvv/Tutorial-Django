@@ -21,3 +21,5 @@ django-debug-toolbar
 
 
 django-allauth
+
+django-redis

@@ -15,10 +15,10 @@ User = get_user_model()
 class LessonTestApiCase(APITestCase):
     """Crud test for Lesson"""
     def setUp(self):
-        self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True, is_teacher=True)
-        self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False, is_teacher=True)
+        self.user = User.objects.create_user('testlesson@gmail.com', password='123456', is_staff=True, )
+        self.user2 = User.objects.create_user('testuser@gmail.com', password='123456', is_staff=False, )
         self.category = Category.objects.create(slug='Programming')
-        self.course = Course.objects.create(name='Python', category=self.category, adviser=self.user)
+        self.course = Course.objects.create(name='Python', category=self.category,)
         self.lesson1 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
         self.lesson2 = Lesson.objects.create(name='testlesson1', description='testdescription1',)
         self.serializer_data = LessonSerializer(Lesson.objects.all(), many=True).data

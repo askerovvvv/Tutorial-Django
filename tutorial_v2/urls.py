@@ -31,12 +31,16 @@ schema_view = get_schema_view(
     ),
     public=True
 )
+
+from lesson import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('lesson/', include('lesson.urls')),
     path('course/', include('course.urls')),
     path('custom_account/', include('custom_account.urls')),
     path('swagger/', schema_view.with_ui('swagger')),
+    path('', views.get)
     # path('', TemplateView.as_view(template_name="index.html")),
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),
