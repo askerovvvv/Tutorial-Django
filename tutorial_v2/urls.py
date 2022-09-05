@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from django.contrib.auth.views import LogoutView
-from custom_account.views import RegisterApiView
+# from custom_account.views import RegisterApiView
 
 schema_view = get_schema_view(
     openapi.Info(

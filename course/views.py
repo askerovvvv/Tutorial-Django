@@ -84,6 +84,7 @@ class CourseViewSet(ModelViewSet):
     def perform_update(self, serializer):
         serializer.save()
 
+    # TODO: teacherpermisson
     def partial_update(self, request, *args, **kwargs):
         if self.get_object().adviser == request.user:
             raise ValueError('You are not teacher of this course')
@@ -92,8 +93,15 @@ class CourseViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = CourseRetrieveSerializer(instance)
-        return Response(serializer.data)
+        if f'retrieve_course{instance.id}' in cache:
+            retrieve_course = cache.get(f'retrieve_course{instance.id}')
+            serializer = CourseRetrieveSerializer(retrieve_course)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            serializer = CourseRetrieveSerializer(instance)
+            cache.set(f'retrieve_course{instance.id}', instance, timeout=20)
+
+            return Response(serializer.data)
 
     @action(methods=['POST'], detail=True)
     def like(self, request, pk):

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 
+
 from custom_account.serializers import RegisterSerializer, ForgotPasswordSerializer, ForgotPasswordCompleteSerializer, \
     UserProfileSerializer
 
@@ -75,6 +76,6 @@ class UserProfile(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(email=self.request.user)
+        queryset = queryset.filter(user=self.request.user)
         return queryset
 

@@ -97,21 +97,21 @@ class ForgotPasswordCompleteSerializer(serializers.Serializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """
-    Usual Serializer for user Serializer it shows now all fields
+    Usual Serializer for user Serializer it shows all fields now
     """
     # a = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('date_joined', 'email', 'is_active', 'is_superuser', )
+        fields = "__all__"
 
     # def get_a(self, instance):
     #     course = Course.objects.filter(adviser=instance)
     #     if course:
     #         return CourseSerializer(course)
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        course = Course.objects.filter(adviser=instance)
-        if course:
-            representation['my_course'] = CourseSerializer(instance.course.all(), many=True).data
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     course = Course.objects.filter(adviser=instance)
+    #     if course:
+    #         representation['my_course'] = CourseSerializer(instance.course.all(), many=True).data
+    #     return representation
