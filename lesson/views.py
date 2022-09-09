@@ -12,7 +12,7 @@ class LessonViewSet(ModelViewSet):
     Ussual viewset for crud for the model Lesson
     """
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
