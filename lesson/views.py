@@ -12,7 +12,7 @@ class LessonViewSet(ModelViewSet):
     Ussual viewset for crud for the model Lesson
     """
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
@@ -39,4 +39,8 @@ class LessonViewSet(ModelViewSet):
 
 def get(request):
     obje = Lesson.objects.all()
+<<<<<<< HEAD
     return render(request, './base.html', {'object_list': obje})
+=======
+    return render(request, './index.html', {'object_list': obje})
+>>>>>>> 5abd6b557ac2a88c846395117af8e693007d3499

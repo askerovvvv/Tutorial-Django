@@ -23,5 +23,3 @@ django-debug-toolbar
 django-allauth
 
 django-redis
-
-django-suit==0.2.28
