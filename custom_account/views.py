@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
+from .send_mail import send_confirmation_email
+from django.http import HttpResponse
+
 # from rest_framework.authtoken.views import ObtainAuthToken
 #
 #
@@ -40,9 +43,9 @@ class ActivationView(APIView):
             user.is_active = True
             user.activation_code = ''
             user.save()
-            return Response("YOU have successfully activated your account", status=status.HTTP_200_OK)
+            return HttpResponse("YOU have successfully activated your account")
         except User.DoesNotExist:
-            return Response("Activation code is not valid")
+            return HttpResponse("Activation code is not valid")
 
 
 class ForgotPasswordApiView(APIView):
