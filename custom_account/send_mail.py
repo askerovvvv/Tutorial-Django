@@ -10,6 +10,6 @@ def send_confirmation_email(code, email):
     send_mail(
         'Activation code for Tutorial_v2',
         full_link,
-        'bekbol.2019@gmail.com',
+        'info@codingsolutionedu.com',
         [email]
     )
