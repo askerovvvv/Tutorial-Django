@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from .send_mail import send_confirmation_email
 from django.http import HttpResponse
 
 # from rest_framework.authtoken.views import ObtainAuthToken
