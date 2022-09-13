@@ -29,9 +29,9 @@ import course.models
 
 
 class Lesson(models.Model):
-    name = models.CharField(max_length=30, verbose_name='Название урока')
-    description = models.TextField(verbose_name='Описание урока')
-    file = models.FileField(upload_to='lessonfile/', verbose_name='Файл с кодом в формате --> MD')
+    name = models.CharField(max_length=30, verbose_name='Lesson name')
+    description = models.TextField(verbose_name='Lesson Description')
+    file = models.FileField(upload_to='lessonfile/', verbose_name='File with code in the format --> MD')
     video = models.FileField(blank=True, upload_to='videolesson/', verbose_name='Video')
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Lesson(models.Model):
         return f'{self.name}'
 
 
-    class Meta:
-        verbose_name = 'Урок'
-        verbose_name_plural = 'Уроки'
+    # class Meta:
+    #     verbose_name = 'Урок'
+    #     verbose_name_plural = 'Уроки'
 

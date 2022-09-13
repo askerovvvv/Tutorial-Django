@@ -41,7 +41,7 @@ urlpatterns = [
     path('custom_account/', include('custom_account.urls')),
     path('swagger/', schema_view.with_ui('swagger')),
     path('', views.get)
-    # path('', TemplateView.as_view(template_name="index.html")),
+    # path('', TemplateView.as_view(template_name="base.html")),
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -39,4 +39,4 @@ class LessonViewSet(ModelViewSet):
 
 def get(request):
     obje = Lesson.objects.all()
-    return render(request, './index.html', {'object_list': obje})
+    return render(request, './base.html', {'object_list': obje})
