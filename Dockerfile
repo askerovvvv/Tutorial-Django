@@ -2,7 +2,7 @@ FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /home/ubuntu/tutorial-USA
+WORKDIR /home/devops/actions-runner/_work/tutorial-USA/tutorial-USA
 
 COPY . .
 
