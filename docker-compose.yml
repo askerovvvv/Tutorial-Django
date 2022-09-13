@@ -6,9 +6,9 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=tutorial_v2
-      - POSTGRES_USER=hello 
-      - POSTGRES_PASSWORD=1
+      - POSTGRES_DB=postgres1
+      - POSTGRES_USER=postgres1 
+      - POSTGRES_PASSWORD=postgres1
   web: 
     build: .
     command: python3 manage.py runserver 0.0.0.0:8001
