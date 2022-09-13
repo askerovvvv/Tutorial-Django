@@ -1,0 +1,35 @@
+
+name: tutor2
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: AutoModality/action-clean@v1   
+      - uses: actions/checkout@v2
+
+      - name: Run Docker-Compose
+        run: |
+          docker-compose up -d      
+          
+      - name: Makemigrations
+        run: |
+          docker-compose run web python3 manage.py makemigrations
+          
+      - name: Migrate
+        run: |
+          docker-compose run web python3 manage.py migrate
+          
+      - name: Collectstatic
+        run: |
+          docker-compose run web python3 manage.py collectstatic 
+          
