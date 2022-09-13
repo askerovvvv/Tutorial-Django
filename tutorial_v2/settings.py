@@ -139,13 +139,14 @@ WSGI_APPLICATION = 'tutorial_v2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_1',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'NAME': 'postgres1',
+        'USER': 'postgres1',
+        'PASSWORD': 'postgres1',
+        'HOST': 'db',
         'PORT': 5432
     }
 }
@@ -198,6 +199,7 @@ DATE_FORMAT = 'Y-m-d'
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
