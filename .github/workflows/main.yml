@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Docker-Compose
         run: |
-          docker-compose up -d
+          docker-compose up -d 
           
       - name: Makemigrations
         run: |
